@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student Dashboard - Hostel Management</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+ <!-- Header -->
+<header class="header">
+    <div class="header-content">
+        <!-- Left Section - Logo and College Info -->
+        <div class="header-left">
+            <div class="logo-section">
+                <img src="image.jpg" alt="Madhav Institute Logo" id="headerLogo" class="college-logo">
+                <div class="logo-placeholder" id="logoPlaceholder">
+                    <div class="logo-circle">LOGO</div>
+                </div>
+            </div>
+            <div class="college-info">
+                <h1>Madhav Institute of Technology & Science, Gwalior (M.P.), INDIA</h1>
+                <h2>माधव प्रौद्योगिकी एवं विज्ञान संस्थान, ग्वालियर (म.प्र.), भारत</h2>
+                <p class="university-status">Deemed University <span>(Declared under Distinct Category by Ministry of Education, Government of India)</span></p>
+                <p class="accreditation">NAAC ACCREDITED WITH A++ GRADE</p>
+            </div>
+        </div>
+        
+        <!-- Right Section - Website Link and Login Buttons -->
+        <div class="header-right">
+            <div class="website-link">
+                <a href="https://www.mitsgwalior.in" target="_blank" class="college-website-btn">
+                    <span class="website-icon">🌐</span>
+                    Visit College Website
+                </a>
+            </div>
+            <div class="login-section">
+                <button class="login-btn student-login" onclick="openStudentLogin()">
+                    <span class="login-icon">👨‍🎓</span>
+                    Student Login
+                </button>
+                <button class="login-btn admin-login" onclick="openAdminLogin()">
+                    <span class="login-icon">👨‍💼</span>
+                    Admin Login
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+  <main class="container" role="main">
+    <!-- First Row: Bulletin Board and Quick Actions -->
+    <div class="top-row">
+      <!-- Left Side - Bulletin Board -->
+      <section class="bulletin-section">
+        <div class="card bulletin-card">
+          <h3>📌 Bulletin Board</h3>
+          <div class="bulletin-slider">
+            <div class="bulletin-slide active">
+              <div class="bulletin-item urgent">
+                <div class="bulletin-pin"></div>
+                <div class="bulletin-header">
+                  <span class="bulletin-category urgent">URGENT</span>
+                  <span class="bulletin-date">📅 Jan 28, 2025</span>
+                </div>
+                <strong>Hostel Fee Payment Reminder</strong>
+                <p>Monthly fee payment due by January 31st, 2025. Please ensure timely payment to avoid late fees.</p>
+                <div class="bulletin-footer">
+                  <small>- Hostel Administration</small>
+                </div>
+              </div>
+            </div>
+            <div class="bulletin-slide">
+              <div class="bulletin-item general">
+                <div class="bulletin-pin"></div>
+                <div class="bulletin-header">
+                  <span class="bulletin-category general">GENERAL</span>
+                  <span class="bulletin-date">📅 Jan 26, 2025</span>
+                </div>
+                <strong>Mess Menu Updated</strong>
+                <p>New vegetarian options added to the weekly menu. Check out the fresh salad bar and new continental dishes.</p>
+                <div class="bulletin-footer">
+                  <small>- Mess Committee</small>
+                </div>
+              </div>
+            </div>
+            <div class="bulletin-slide">
+              <div class="bulletin-item maintenance">
+                <div class="bulletin-pin"></div>
+                <div class="bulletin-header">
+                  <span class="bulletin-category maintenance">MAINTENANCE</span>
+                  <span class="bulletin-date">📅 Jan 30, 2025</span>
+                </div>
+                <strong>Water Supply Maintenance</strong>
+                <p>Water supply will be temporarily suspended on Sunday (Feb 2nd) from 10 AM to 2 PM for pipeline maintenance.</p>
+                <div class="bulletin-footer">
+                  <small>- Maintenance Department</small>
+                </div>
+              </div>
+            </div>
+            <div class="bulletin-slide">
+              <div class="bulletin-item important">
+                <div class="bulletin-pin"></div>
+                <div class="bulletin-header">
+                  <span class="bulletin-category important">IMPORTANT</span>
+                  <span class="bulletin-date">📅 Jan 29, 2025</span>
+                </div>
+                <strong>WiFi Password Updated</strong>
+                <p>WiFi password has been updated for security purposes. Please contact the reception for the new credentials.</p>
+                <div class="bulletin-footer">
+                  <small>- IT Department</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="slider-controls">
+            <button class="slider-btn prev" onclick="previousSlide()">‹</button>
+            <div class="slider-dots">
+              <span class="dot active" onclick="currentSlide(1)"></span>
+              <span class="dot" onclick="currentSlide(2)"></span>
+              <span class="dot" onclick="currentSlide(3)"></span>
+              <span class="dot" onclick="currentSlide(4)"></span>
+            </div>
+            <button class="slider-btn next" onclick="nextSlide()">›</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Side - Quick Actions and Recent Complaints -->
+      <section class="right-section">
+        <div class="card quick-actions-card">
+          <h3>🚀 Quick Actions</h3>
+          <div class="quick-actions-list">
+            <div class="action-item" onclick="handleComplaintClick()">
+              <span class="action-bullet">•</span>
+              <span class="action-text">File Complaint</span>
+              <span class="action-icon">📝</span>
+            </div>
+            <div class="action-item" onclick="handleLeaveClick()">
+              <span class="action-bullet">•</span>
+              <span class="action-text">Apply for Leave</span>
+              <span class="action-icon">✈️</span>
+            </div>
+            <div class="action-item" onclick="handleProfileClick()">
+              <span class="action-bullet">•</span>
+              <span class="action-text">View Profile</span>
+              <span class="action-icon">👤</span>
+            </div>
+            <div class="action-item" onclick="handleMaintenanceClick()">
+              <span class="action-bullet">•</span>
+              <span class="action-text">Maintenance Request</span>
+              <span class="action-icon">🔧</span>
+            </div>
+            <div class="action-item" onclick="handleGuestRoomClick()">
+              <span class="action-bullet">•</span>
+              <span class="action-text">Book Guest Room</span>
+              <span class="action-icon">🏨</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card recent-complaints-card">
+          <h3>📋 Recent Complaints</h3>
+          <div class="complaint-item">
+            <div class="complaint-header">
+              <strong>AC not working</strong>
+              <span class="status-pending">Pending</span>
+            </div>
+            <small>📅 Jan 25, 2025</small>
+          </div>
+          <div class="complaint-item">
+            <div class="complaint-header">
+              <strong>Water leakage in bathroom</strong>
+              <span class="status-progress">In Progress</span>
+            </div>
+            <small>📅 Jan 20, 2025</small>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Second Row: Room Information -->
+    <section class="room-info-section">
+      <div class="card room-info-card">
+        <h3>🏠 Room Occupancy Overview</h3>
+        <div class="rooms-grid">
+          <div class="room-cell">
+            <div class="room-header">Room A-101</div>
+            <div class="room-occupants">
+              <div class="occupant">Ankit Gurjar</div>
+              <div class="occupant">Rahul Sharma</div>
+              <div class="occupant">Vikash Kumar</div>
+              <div class="occupant">Amit Singh</div>
+            </div>
+            <div class="room-status occupied">Occupied</div>
+          </div>
+          
+          <div class="room-cell">
+            <div class="room-header">Room A-102</div>
+            <div class="room-occupants">
+              <div class="occupant">Priya Patel</div>
+              <div class="occupant">Sneha Jain</div>
+              <div class="occupant">Kavya Reddy</div>
+              <div class="occupant empty">-</div>
+            </div>
+            <div class="room-status partial">Partial</div>
+          </div>
+          
+          <div class="room-cell">
+            <div class="room-header">Room A-103</div>
+            <div class="room-occupants">
+              <div class="occupant">Ravi Mehta</div>
+              <div class="occupant">Suresh Yadav</div>
+              <div class="occupant empty">-</div>
+              <div class="occupant empty">-</div>
+            </div>
+            <div class="room-status partial">Partial</div>
+          </div>
+          
+          <div class="room-cell">
+            <div class="room-header">Room A-104</div>
+            <div class="room-occupants">
+              <div class="occupant">Deepak Joshi</div>
+              <div class="occupant">Manoj Tiwari</div>
+              <div class="occupant">Pooja Gupta</div>
+              <div class="occupant">Arjun Mishra</div>
+            </div>
+            <div class="room-status occupied">Occupied</div>
+          </div>
+          
+          <div class="room-cell">
+            <div class="room-header">Room A-105</div>
+            <div class="room-occupants">
+              <div class="occupant">Rohit Agarwal</div>
+              <div class="occupant empty">-</div>
+              <div class="occupant empty">-</div>
+              <div class="occupant empty">-</div>
+            </div>
+            <div class="room-status partial">Partial</div>
+          </div>
+          
+          <div class="room-cell">
+            <div class="room-header">Room B-201</div>
+            <div class="room-occupants">
+              <div class="occupant">Manish Patel</div>
+              <div class="occupant">Sachin Verma</div>
+              <div class="occupant">Nikhil Jain</div>
+              <div class="occupant">Rajesh Kumar</div>
+            </div>
+            <div class="room-status occupied">Occupied</div>
+          </div>
+          
+          <div class="room-cell">
+            <div class="room-header">Room B-202</div>
+            <div class="room-occupants">
+              <div class="occupant">Neha Sharma</div>
+              <div class="occupant">Priyanka Singh</div>
+              <div class="occupant empty">-</div>
+              <div class="occupant empty">-</div>
+            </div>
+            <div class="room-status partial">Partial</div>
+          </div>
+          
+          <div class="room-cell">
+            <div class="room-header">Room B-203</div>
+            <div class="room-occupants">
+              <div class="occupant">Aditya Rao</div>
+              <div class="occupant">Karan Mehta</div>
+              <div class="occupant">Vishal Gupta</div>
+              <div class="occupant">Shubham Joshi</div>
+            </div>
+            <div class="room-status occupied">Occupied</div>
+          </div>
+          
+          <div class="room-cell">
+            <div class="room-header">Room B-204</div>
+            <div class="room-occupants">
+              <div class="occupant">Ritika Agarwal</div>
+              <div class="occupant empty">-</div>
+              <div class="occupant empty">-</div>
+              <div class="occupant empty">-</div>
+            </div>
+            <div class="room-status partial">Partial</div>
+          </div>
+          
+          <div class="room-cell">
+            <div class="room-header">Room B-205</div>
+            <div class="room-occupants">
+              <div class="occupant empty">-</div>
+              <div class="occupant empty">-</div>
+              <div class="occupant empty">-</div>
+              <div class="occupant empty">-</div>
+            </div>
+            <div class="room-status available">Available</div>
+          </div>
+        </div>
+        
+        <div class="room-legend">
+          <div class="legend-item">
+            <span class="legend-color occupied"></span>
+            <span>Occupied (4/4)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color partial"></span>
+            <span>Partial (1-3/4)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color available"></span>
+            <span>Available (0/4)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Student Login Modal -->
+  <div id="studentLoginModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeStudentLogin()">&times;</span>
+      <h2>Student Login</h2>
+      <div id="studentLoginError" class="error-message"></div>
+      <form class="login-form" id="studentLoginForm">
+        <input type="text" id="studentId" placeholder="Student ID" required>
+        <input type="password" id="studentPassword" placeholder="Password" required>
+        <button type="submit">Login</button>
+      </form>
+      <div class="forgot-password">
+        <a href="#" onclick="forgotPassword('student')">Forgot Password?</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Login Modal -->
+  <div id="adminLoginModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeAdminLogin()">&times;</span>
+      <h2>Admin Login</h2>
+      <div id="adminLoginError" class="error-message"></div>
+      <form class="login-form" id="adminLoginForm">
+        <input type="text" id="adminUsername" placeholder="Admin Username" required>
+        <input type="password" id="adminPassword" placeholder="Password" required>
+        <button type="submit">Login</button>
+      </form>
+      <div class="forgot-password">
+        <a href="#" onclick="forgotPassword('admin')">Forgot Password?</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Message Modal -->
+  <div id="successModal" class="modal">
+    <div class="modal-content success-modal">
+      <span class="close" onclick="closeSuccessModal()">&times;</span>
+      <div class="success-icon">✅</div>
+      <h2>Login Successful!</h2>
+      <p id="successMessage"></p>
+      <button onclick="closeSuccessModal()" class="success-btn">Continue</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

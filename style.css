@@ -1,0 +1,983 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f6fa;
+  line-height: 1.6;
+  color: #333;
+  min-height: 100vh;
+}
+
+/* Header Styles */
+.header {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  padding: 20px 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  gap: 30px;
+}
+
+/* Header Left Section */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+}
+
+.logo-section {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.college-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  object-fit: cover;
+  display: block;
+}
+
+.logo-placeholder {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.logo-circle {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.college-info {
+  color: white;
+  flex: 1;
+}
+
+.college-info h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.college-info h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  opacity: 0.95;
+}
+
+.university-status {
+  font-size: 14px;
+  margin-bottom: 5px;
+  opacity: 0.9;
+}
+
+.university-status span {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.accreditation {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffd700;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Header Right Section */
+.header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 15px;
+  flex-shrink: 0;
+}
+
+.website-link {
+  margin-bottom: 5px;
+}
+
+.college-website-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.college-website-btn:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.website-icon {
+  font-size: 14px;
+}
+
+/* Login Section */
+.login-section {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.login-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 10px 18px;
+  border-radius: 25px;
+  font-weight: 500;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.login-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.student-login:hover {
+  background-color: rgba(76, 175, 80, 0.3);
+  border-color: rgba(76, 175, 80, 0.5);
+}
+
+.admin-login:hover {
+  background-color: rgba(255, 152, 0, 0.3);
+  border-color: rgba(255, 152, 0, 0.5);
+}
+
+.login-icon {
+  font-size: 16px;
+}
+
+/* Main Container */
+.container {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+/* Top Row Layout */
+.top-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+/* Cards */
+.card {
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card h3 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* Bulletin Board Section */
+.bulletin-section {
+  position: relative;
+}
+
+.bulletin-card {
+  min-height: 400px;
+  position: relative;
+  background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+  color: white;
+  border: 8px solid #654321;
+  box-shadow: inset 0 0 0 4px #D2691E, 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.bulletin-card h3 {
+  color: #FFE4B5;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  border-bottom: 2px solid #FFE4B5;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.bulletin-slider {
+  position: relative;
+  height: 280px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.bulletin-slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all 0.5s ease-in-out;
+}
+
+.bulletin-slide.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.bulletin-item {
+  background: #FFF8DC;
+  color: #333;
+  padding: 25px;
+  border-radius: 8px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: 2px solid #DDD;
+  transform: rotate(-1deg);
+  transition: transform 0.3s ease;
+}
+
+.bulletin-item:hover {
+  transform: rotate(0deg) scale(1.02);
+}
+
+.bulletin-item.urgent {
+  border-left: 6px solid #FF4444;
+  background: linear-gradient(135deg, #FFE4E1 0%, #FFF8DC 100%);
+}
+
+.bulletin-item.general {
+  border-left: 6px solid #4CAF50;
+  background: linear-gradient(135deg, #F0FFF0 0%, #FFF8DC 100%);
+}
+
+.bulletin-item.maintenance {
+  border-left: 6px solid #FF9800;
+  background: linear-gradient(135deg, #FFF8E1 0%, #FFF8DC 100%);
+}
+
+.bulletin-item.important {
+  border-left: 6px solid #2196F3;
+  background: linear-gradient(135deg, #E3F2FD 0%, #FFF8DC 100%);
+}
+
+.bulletin-pin {
+  position: absolute;
+  top: -8px;
+  right: 20px;
+  width: 16px;
+  height: 16px;
+  background: radial-gradient(circle, #FF6B6B 30%, #FF4444 70%);
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+
+.bulletin-pin::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 4px;
+  height: 4px;
+  background: #FFFFFF;
+  border-radius: 50%;
+}
+
+.bulletin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.bulletin-category {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.bulletin-category.urgent {
+  background: #FF4444;
+  color: white;
+}
+
+.bulletin-category.general {
+  background: #4CAF50;
+  color: white;
+}
+
+.bulletin-category.maintenance {
+  background: #FF9800;
+  color: white;
+}
+
+.bulletin-category.important {
+  background: #2196F3;
+  color: white;
+}
+
+.bulletin-date {
+  font-size: 11px;
+  color: #666;
+  font-weight: 500;
+}
+
+.bulletin-item strong {
+  font-size: 18px;
+  color: #2C3E50;
+  margin-bottom: 15px;
+  display: block;
+  line-height: 1.3;
+}
+
+.bulletin-item p {
+  color: #555;
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: auto;
+  flex-grow: 1;
+}
+
+.bulletin-footer {
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px dashed #CCC;
+}
+
+.bulletin-footer small {
+  color: #777;
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* Slider Controls */
+.slider-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding: 0 10px;
+}
+
+.slider-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slider-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.slider-dots {
+  display: flex;
+  gap: 10px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #ddd;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dot.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transform: scale(1.2);
+}
+
+/* Right Section */
+.right-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Quick Actions */
+.quick-actions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.action-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.action-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.action-bullet {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.action-text {
+  flex: 1;
+  font-size: 14px;
+}
+
+.action-icon {
+  font-size: 18px;
+}
+
+/* Recent Complaints */
+.complaint-item {
+  background-color: #f8f9fa;
+  padding: 15px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  border-left: 4px solid #667eea;
+}
+
+.complaint-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.status-pending {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.status-progress {
+  background-color: #cce5ff;
+  color: #0066cc;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* Room Information Section */
+.room-info-section {
+  width: 100%;
+}
+
+.room-info-card {
+  width: 100%;
+}
+
+.rooms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.room-cell {
+  background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+  border: 2px solid #e1e8ed;
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.room-cell:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border-color: #667eea;
+}
+
+.room-header {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #667eea;
+}
+
+.room-occupants {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.occupant {
+  background-color: #667eea;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.occupant:hover {
+  transform: scale(1.05);
+  box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+}
+
+.occupant.empty {
+  background-color: #e1e8ed;
+  color: #666;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.room-status {
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.room-status.occupied {
+  background-color: #ff4444;
+  color: white;
+}
+
+.room-status.partial {
+  background-color: #ff9800;
+  color: white;
+}
+
+.room-status.available {
+  background-color: #4caf50;
+  color: white;
+}
+
+/* Room Legend */
+.room-legend {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  margin-top: 25px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f1f3f4 0%, #ffffff 100%);
+  border-radius: 10px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.legend-color.occupied {
+  background-color: #ff4444;
+}
+
+.legend-color.partial {
+  background-color: #ff9800;
+}
+
+.legend-color.available {
+  background-color: #4caf50;
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 10% auto;
+  padding: 30px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 400px;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  position: absolute;
+  right: 15px;
+  top: 15px;
+}
+
+.close:hover {
+  color: #333;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.login-form h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.login-form input {
+  padding: 12px 15px;
+  border: 2px solid #e1e8ed;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.login-form input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.login-form button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.login-form button:hover {
+  transform: translateY(-2px);
+}
+
+.login-form button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Error Message */
+.error-message {
+  background-color: #ffe6e6;
+  color: #d32f2f;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  font-size: 14px;
+  text-align: center;
+  display: none;
+}
+
+.error-message.show {
+  display: block;
+}
+
+/* Forgot Password */
+.forgot-password {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.forgot-password a {
+  color: #667eea;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
+
+/* Success Modal */
+.success-modal {
+  text-align: center;
+}
+
+.success-icon {
+  font-size: 60px;
+  margin-bottom: 20px;
+}
+
+.success-btn {
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  margin-top: 20px;
+}
+
+.success-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #667eea;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .header-content {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+  
+  .header-left {
+    justify-content: center;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .college-info h1 {
+    font-size: 20px;
+  }
+  
+  .college-info h2 {
+    font-size: 16px;
+  }
+  
+  .header-right {
+    align-items: center;
+  }
+
+  .top-row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .rooms-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 15px 20px;
+  }
+  
+  .college-logo, .logo-placeholder {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .college-info h1 {
+    font-size: 16px;
+  }
+  
+  .college-info h2 {
+    font-size: 14px;
+  }
+  
+  .login-section {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .login-btn {
+    padding: 8px 15px;
+    font-size: 12px;
+  }
+
+  .rooms-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+
+  .room-legend {
+    gap: 15px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .bulletin-slider {
+    height: 250px;
+  }
+
+  .bulletin-item {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 10px 15px;
+  }
+  
+  .college-logo, .logo-placeholder {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .college-info h1 {
+    font-size: 14px;
+  }
+  
+  .college-info h2 {
+    font-size: 12px;
+  }
+  
+  .university-status, .accreditation {
+    font-size: 11px;
+  }
+
+  .login-btn {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+
+  .container {
+    padding: 0 15px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .rooms-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .room-cell {
+    padding: 15px;
+  }
+
+  .room-header {
+    font-size: 16px;
+  }
+
+  .occupant {
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+}

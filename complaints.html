@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Complaint - Hostel Management</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .complaint-form-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .complaint-form {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            width: 100%;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .back-btn:hover {
+            background: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="complaint-form-container">
+        <a href="index.html" class="back-btn">← Back to Dashboard</a>
+        
+        <div class="complaint-form">
+            <h2>�📝 File a Complaint</h2>
+            <p style="margin-bottom: 25px; color: #666;">Please provide details about your complaint. We'll address it as soon as possible.</p>
+            
+            <form id="complaintForm">
+                <div class="form-group">
+                    <label for="studentName">Student Name</label>
+                    <input type="text" id="studentName" name="studentName" required readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="roomNumber">Room Number</label>
+                    <input type="text" id="roomNumber" name="roomNumber" required readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="complaintType">Complaint Type</label>
+                    <select id="complaintType" name="complaintType" required>
+                        <option value="">Select complaint type</option>
+                        <option value="maintenance">Maintenance Issue</option>
+                        <option value="cleanliness">Cleanliness</option>
+                        <option value="security">Security</option>
+                        <option value="noise">Noise Complaint</option>
+                        <option value="facility">Facility Issue</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="priority">Priority Level</label>
+                    <select id="priority" name="priority" required>
+                        <option value="">Select priority</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                        <option value="urgent">Urgent</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" name="subject" placeholder="Brief description of the issue" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Detailed Description</label>
+                    <textarea id="description" name="description" placeholder="Please provide detailed information about your complaint..." required></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn">Submit Complaint</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Load user data from session storage
+        document.addEventListener('DOMContentLoaded', function() {
+            const loggedInUser = sessionStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                const user = JSON.parse(loggedInUser);
+                document.getElementById('studentName').value = user.name || '';
+                document.getElementById('roomNumber').value = user.room || '';
+            } else {
+                // Redirect to login if not logged in
+                alert('Please login first');
+                window.location.href = 'index.html';
+            }
+        });
+        
+        // Handle form submission
+        document.getElementById('complaintForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const complaintData = {
+                studentName: formData.get('studentName'),
+                roomNumber: formData.get('roomNumber'),
+                complaintType: formData.get('complaintType'),
+                priority: formData.get('priority'),
+                subject: formData.get('subject'),
+                description: formData.get('description'),
+                timestamp: new Date().toISOString()
+            };
+            
+            // In a real application, this would be sent to the server
+            console.log('Complaint submitted:', complaintData);
+            
+            alert('Complaint submitted successfully! We will address it soon.');
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>

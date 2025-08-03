@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for Leave - Hostel Management</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .leave-form-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .leave-form {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            width: 100%;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .back-btn:hover {
+            background: #5a6268;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="leave-form-container">
+        <a href="index.html" class="back-btn">← Back to Dashboard</a>
+        
+        <div class="leave-form">
+            <h2>✈️ Apply for Leave</h2>
+            <p style="margin-bottom: 25px; color: #666;">Please fill out the form to apply for leave from the hostel.</p>
+            
+            <form id="leaveForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="studentName">Student Name</label>
+                        <input type="text" id="studentName" name="studentName" required readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="roomNumber">Room Number</label>
+                        <input type="text" id="roomNumber" name="roomNumber" required readonly>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="leaveType">Leave Type</label>
+                        <select id="leaveType" name="leaveType" required>
+                            <option value="">Select leave type</option>
+                            <option value="casual">Casual Leave</option>
+                            <option value="medical">Medical Leave</option>
+                            <option value="emergency">Emergency Leave</option>
+                            <option value="vacation">Vacation Leave</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="duration">Duration</label>
+                        <select id="duration" name="duration" required>
+                            <option value="">Select duration</option>
+                            <option value="1-day">1 Day</option>
+                            <option value="2-3-days">2-3 Days</option>
+                            <option value="1-week">1 Week</option>
+                            <option value="2-weeks">2 Weeks</option>
+                            <option value="1-month">1 Month</option>
+                            <option value="extended">Extended (More than 1 month)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fromDate">From Date</label>
+                        <input type="date" id="fromDate" name="fromDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="toDate">To Date</label>
+                        <input type="date" id="toDate" name="toDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="reason">Reason for Leave</label>
+                    <textarea id="reason" name="reason" placeholder="Please provide the reason for your leave..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contactNumber">Emergency Contact Number</label>
+                    <input type="tel" id="contactNumber" name="contactNumber" placeholder="Phone number where you can be reached" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">Address During Leave</label>
+                    <textarea id="address" name="address" placeholder="Address where you'll be staying during leave..." required></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn">Submit Leave Application</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Load user data from session storage
+        document.addEventListener('DOMContentLoaded', function() {
+            const loggedInUser = sessionStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                const user = JSON.parse(loggedInUser);
+                document.getElementById('studentName').value = user.name || '';
+                document.getElementById('roomNumber').value = user.room || '';
+            } else {
+                // Redirect to login if not logged in
+                alert('Please login first');
+                window.location.href = 'index.html';
+            }
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('fromDate').setAttribute('min', today);
+            document.getElementById('toDate').setAttribute('min', today);
+        });
+        
+        // Update to date minimum when from date changes
+        document.getElementById('fromDate').addEventListener('change', function() {
+            const fromDate = this.value;
+            document.getElementById('toDate').setAttribute('min', fromDate);
+        });
+        
+        // Handle form submission
+        document.getElementById('leaveForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const fromDate = new Date(formData.get('fromDate'));
+            const toDate = new Date(formData.get('toDate'));
+            
+            // Validate dates
+            if (toDate < fromDate) {
+                alert('To date cannot be earlier than from date');
+                return;
+            }
+            
+            const leaveData = {
+                studentName: formData.get('studentName'),
+                roomNumber: formData.get('roomNumber'),
+                leaveType: formData.get('leaveType'),
+                duration: formData.get('duration'),
+                fromDate: formData.get('fromDate'),
+                toDate: formData.get('toDate'),
+                reason: formData.get('reason'),
+                contactNumber: formData.get('contactNumber'),
+                address: formData.get('address'),
+                timestamp: new Date().toISOString()
+            };
+            
+            // In a real application, this would be sent to the server
+            console.log('Leave application submitted:', leaveData);
+            
+            alert('Leave application submitted successfully! You will be notified once it is reviewed.');
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>
