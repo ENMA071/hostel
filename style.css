@@ -981,3 +981,77 @@ body {
     font-size: 11px;
   }
 }
+/* Add to login-btn styles */
+.signup-btn:hover {
+  background-color: rgba(106, 27, 154, 0.3);
+  border-color: rgba(106, 27, 154, 0.5);
+}
+
+.profile-btn:hover {
+  background-color: rgba(0, 123, 255, 0.3);
+  border-color: rgba(0, 123, 255, 0.5);
+}
+
+.logout-btn:hover {
+  background-color: rgba(220, 53, 69, 0.3);
+  border-color: rgba(220, 53, 69, 0.5);
+}
+
+/* Responsive adjustments for multiple buttons */
+@media (max-width: 768px) {
+  .login-section {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .login-btn {
+    flex: 1 1 120px;
+    min-width: 120px;
+  }
+}
+/* Add to style.css */
+.login-tabs {
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e1e8ed;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 10px;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  color: #667eea;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+  border-bottom-color: #667eea;
+  color: #333;
+}
+
+.tab-btn:not(.active):hover {
+  color: #764ba2;
+}
+/* Add these styles to your CSS */
+.profile-btn {
+    background-color: rgba(0, 123, 255, 0.3);
+    border-color: rgba(0, 123, 255, 0.5);
+}
+
+.logout-btn {
+    background-color: rgba(220, 53, 69, 0.3);
+    border-color: rgba(220, 53, 69, 0.5);
+}
+
+.profile-btn:hover {
+    background-color: rgba(0, 123, 255, 0.4);
+}
+
+.logout-btn:hover {
+    background-color: rgba(220, 53, 69, 0.4);
+}

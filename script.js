@@ -32,6 +32,10 @@ const roomData = {
     'B-205': { occupants: ['', '', '', ''], status: 'available' }
 };
 
+// Signup and OTP related variables
+const pendingSignups = {};
+const otpStore = {};
+
 // Document ready function
 document.addEventListener('DOMContentLoaded', function() {
     initializePage();
@@ -39,6 +43,18 @@ document.addEventListener('DOMContentLoaded', function() {
     handleHeaderImage();
     setupFormValidation();
     updateRoomDisplay();
+    
+    // Add signup form handler
+    const signupForm = document.getElementById('studentSignupForm');
+    if (signupForm) {
+        signupForm.addEventListener('submit', handleStudentSignup);
+    }
+    
+    // Add OTP form handler
+    const otpForm = document.getElementById('otpForm');
+    if (otpForm) {
+        otpForm.addEventListener('submit', handleOtpVerification);
+    }
 });
 
 // Handle header image/logo loading
@@ -48,29 +64,19 @@ function handleHeaderImage() {
     
     if (headerLogo) {
         headerLogo.onload = function() {
-            // Image loaded successfully, hide placeholder
-            if (placeholder) {
-                placeholder.style.display = 'none';
-            }
+            if (placeholder) placeholder.style.display = 'none';
             headerLogo.style.display = 'block';
         };
         
         headerLogo.onerror = function() {
-            // Image failed to load, show placeholder
-            if (placeholder) {
-                placeholder.style.display = 'flex';
-            }
+            if (placeholder) placeholder.style.display = 'flex';
             headerLogo.style.display = 'none';
         };
         
-        // Check if image is already loaded (cached)
         if (headerLogo.complete && headerLogo.naturalHeight !== 0) {
             headerLogo.onload();
-        } else {
-            // If image source is empty or invalid, show placeholder
-            if (!headerLogo.src || headerLogo.src.includes('image.jpg')) {
-                headerLogo.onerror();
-            }
+        } else if (!headerLogo.src || headerLogo.src.includes('image.jpg')) {
+            headerLogo.onerror();
         }
     }
 }
@@ -81,6 +87,52 @@ function initializePage() {
     loadStudentData();
     updateDateTime();
     loadRecentComplaints();
+    updateLoginSection(); // Update login UI based on current state
+}
+
+// Update login section based on authentication state
+function updateLoginSection() {
+    const loginSection = document.querySelector('.login-section');
+    const loggedInUser = sessionStorage.getItem('loggedInUser');
+    
+    if (!loginSection) return;
+    
+    if (loggedInUser) {
+        try {
+            const user = JSON.parse(loggedInUser);
+            loginSection.innerHTML = `
+                <button class="login-btn profile-btn" onclick="handleProfileClick()">
+                    <span class="login-icon">👤</span>
+                    ${user.name.split(' ')[0]}
+                </button>
+                <button class="login-btn logout-btn" onclick="logout()">
+                    <span class="login-icon">🚪</span>
+                    Logout
+                </button>
+            `;
+        } catch (e) {
+            console.error('Error parsing user data:', e);
+            showLoginButtons();
+        }
+    } else {
+        showLoginButtons();
+    }
+}
+
+function showLoginButtons() {
+    const loginSection = document.querySelector('.login-section');
+    if (loginSection) {
+        loginSection.innerHTML = `
+            <button class="login-btn student-login" onclick="openStudentLogin()">
+                <span class="login-icon">👨‍🎓</span>
+                Student Login
+            </button>
+            <button class="login-btn admin-login" onclick="openAdminLogin()">
+                <span class="login-icon">👨‍💼</span>
+                Admin Login
+            </button>
+        `;
+    }
 }
 
 // Update room display based on data
@@ -133,17 +185,14 @@ function showSlide(n) {
     if (n > totalSlides) currentSlide = 1;
     if (n < 1) currentSlide = totalSlides;
     
-    // Hide all slides
     for (let i = 0; i < slides.length; i++) {
         slides[i].classList.remove('active');
     }
     
-    // Remove active from all dots
     for (let i = 0; i < dots.length; i++) {
         dots[i].classList.remove('active');
     }
     
-    // Show current slide and activate dot
     if (slides[currentSlide - 1]) {
         slides[currentSlide - 1].classList.add('active');
     }
@@ -171,48 +220,97 @@ function currentSlideGoto(n) {
 function startAutoSlider() {
     setInterval(function() {
         nextSlide();
-    }, 5000); // Change slide every 5 seconds
+    }, 5000);
 }
 
 // Login Modal Functions
 function openStudentLogin() {
     const modal = document.getElementById('studentLoginModal');
-    
-    modal.style.display = 'block';
-    clearFormErrors('student');
-    
-    // Focus on first input
-    setTimeout(() => {
-        const firstInput = modal.querySelector('input[type="text"]');
-        if (firstInput) firstInput.focus();
-    }, 100);
+    if (modal) {
+        modal.style.display = 'block';
+        clearFormErrors('student');
+        switchTab('login'); // Always show login form first
+        
+        setTimeout(() => {
+            const firstInput = modal.querySelector('input[type="text"]');
+            if (firstInput) firstInput.focus();
+        }, 100);
+    }
 }
 
 function closeStudentLogin() {
     const modal = document.getElementById('studentLoginModal');
-    modal.style.display = 'none';
-    clearForm('studentLoginForm');
-    clearFormErrors('student');
+    if (modal) {
+        modal.style.display = 'none';
+        clearForm('studentLoginForm');
+        clearFormErrors('student');
+    }
 }
 
 function openAdminLogin() {
     const modal = document.getElementById('adminLoginModal');
-    
-    modal.style.display = 'block';
-    clearFormErrors('admin');
-    
-    // Focus on first input
-    setTimeout(() => {
-        const firstInput = modal.querySelector('input[type="text"]');
-        if (firstInput) firstInput.focus();
-    }, 100);
+    if (modal) {
+        modal.style.display = 'block';
+        clearFormErrors('admin');
+        
+        setTimeout(() => {
+            const firstInput = modal.querySelector('input[type="text"]');
+            if (firstInput) firstInput.focus();
+        }, 100);
+    }
 }
 
 function closeAdminLogin() {
     const modal = document.getElementById('adminLoginModal');
-    modal.style.display = 'none';
-    clearForm('adminLoginForm');
-    clearFormErrors('admin');
+    if (modal) {
+        modal.style.display = 'none';
+        clearForm('adminLoginForm');
+        clearFormErrors('admin');
+    }
+}
+
+function openOtpModal() {
+    const modal = document.getElementById('otpModal');
+    if (modal) {
+        modal.style.display = 'block';
+        clearFormErrors('otp');
+        
+        setTimeout(() => {
+            const otpInput = document.getElementById('otpCode');
+            if (otpInput) otpInput.focus();
+        }, 100);
+    }
+}
+
+function closeOtpModal() {
+    const modal = document.getElementById('otpModal');
+    if (modal) {
+        modal.style.display = 'none';
+        clearForm('otpForm');
+        clearFormErrors('otp');
+    }
+}
+
+// Tab switching for login/signup
+function switchTab(tab) {
+    const loginForm = document.getElementById('loginFormContainer');
+    const signupForm = document.getElementById('signupFormContainer');
+    const loginTab = document.getElementById('loginTabBtn');
+    const signupTab = document.getElementById('signupTabBtn');
+    
+    if (loginForm && signupForm && loginTab && signupTab) {
+        if (tab === 'login') {
+            loginForm.style.display = 'block';
+            signupForm.style.display = 'none';
+            loginTab.classList.add('active');
+            signupTab.classList.remove('active');
+        } else {
+            loginForm.style.display = 'none';
+            signupForm.style.display = 'block';
+            loginTab.classList.remove('active');
+            signupTab.classList.add('active');
+        }
+    }
 }
 
 // Success Modal Functions
@@ -220,30 +318,31 @@ function showSuccessModal(message) {
     const modal = document.getElementById('successModal');
     const messageElement = document.getElementById('successMessage');
     
-    messageElement.textContent = message;
-    modal.style.display = 'block';
-    
-    // Auto close after 3 seconds
-    setTimeout(() => {
-        closeSuccessModal();
-    }, 3000);
+    if (modal && messageElement) {
+        messageElement.textContent = message;
+        modal.style.display = 'block';
+        
+        setTimeout(() => {
+            closeSuccessModal();
+        }, 3000);
+    }
 }
 
 function closeSuccessModal() {
     const modal = document.getElementById('successModal');
-    modal.style.display = 'none';
+    if (modal) modal.style.display = 'none';
 }
 
 // Form handling functions
 function clearForm(formId) {
     const form = document.getElementById(formId);
-    if (form) {
-        form.reset();
-    }
+    if (form) form.reset();
 }
 
 function clearFormErrors(type) {
-    const errorDiv = document.getElementById(type + 'LoginError');
+    const errorDiv = document.getElementById(type + 'LoginError') || 
+                     document.getElementById(type + 'SignupError') || 
+                     document.getElementById(type + 'Error');
     if (errorDiv) {
         errorDiv.textContent = '';
         errorDiv.classList.remove('show');
@@ -251,7 +350,9 @@ function clearFormErrors(type) {
 }
 
 function showFormError(type, message) {
-    const errorDiv = document.getElementById(type + 'LoginError');
+    const errorDiv = document.getElementById(type + 'LoginError') || 
+                     document.getElementById(type + 'SignupError') || 
+                     document.getElementById(type + 'Error');
     if (errorDiv) {
         errorDiv.textContent = message;
         errorDiv.classList.add('show');
@@ -259,12 +360,16 @@ function showFormError(type, message) {
 }
 
 function setButtonLoading(button, isLoading) {
-    if (isLoading) {
-        button.disabled = true;
-        button.innerHTML = '<div class="loading-spinner"></div>Logging in...';
-    } else {
-        button.disabled = false;
-        button.innerHTML = 'Login';
+    if (button) {
+        if (isLoading) {
+            button.disabled = true;
+            button.innerHTML = '<div class="loading-spinner"></div>Processing...';
+        } else {
+            button.disabled = false;
+            button.textContent = button.textContent.replace('Processing...', '').trim();
+            const originalText = button.getAttribute('data-original-text') || 'Submit';
+            button.textContent = originalText;
+        }
     }
 }
 
@@ -275,13 +380,11 @@ function validateEmail(email) {
 }
 
 function validateStudentId(studentId) {
-    // Student ID should be alphanumeric and at least 3 characters
     const studentIdRegex = /^[A-Z0-9]{3,}$/i;
     return studentIdRegex.test(studentId);
 }
 
 function validatePassword(password) {
-    // Password should be at least 6 characters
     return password && password.length >= 6;
 }
 
@@ -293,10 +396,8 @@ function handleStudentLogin(e) {
     const password = document.getElementById('studentPassword').value;
     const submitButton = e.target.querySelector('button[type="submit"]');
     
-    // Clear previous errors
     clearFormErrors('student');
     
-    // Validate inputs
     if (!studentId) {
         showFormError('student', 'Please enter your Student ID');
         return;
@@ -317,19 +418,12 @@ function handleStudentLogin(e) {
         return;
     }
     
-    // Set loading state
     setButtonLoading(submitButton, true);
     
-    // Simulate API call delay
     setTimeout(() => {
-        // Check credentials
         const user = mockUsers.students[studentId.toUpperCase()];
         
         if (user && user.password === password) {
-            // Login successful
-            console.log('Student login successful:', { studentId: studentId.toUpperCase(), name: user.name });
-            
-            // Store login session
             sessionStorage.setItem('loggedInUser', JSON.stringify({
                 type: 'student',
                 id: studentId.toUpperCase(),
@@ -338,21 +432,16 @@ function handleStudentLogin(e) {
             }));
             
             setButtonLoading(submitButton, false);
+            updateLoginSection(); // Update UI immediately
             closeStudentLogin();
             showSuccessModal(`Welcome back, ${user.name}! You have been logged in successfully.`);
             
-            // Update UI for logged in user
-            updateUIForLoggedInUser('student', user);
-            
-            // Handle any pending actions
             handlePendingAction();
-            
         } else {
-            // Login failed
             setButtonLoading(submitButton, false);
             showFormError('student', 'Invalid Student ID or password. Please try again.');
         }
-    }, 1500); // Simulate network delay
+    }, 1500);
 }
 
 function handleAdminLogin(e) {
@@ -362,10 +451,8 @@ function handleAdminLogin(e) {
     const password = document.getElementById('adminPassword').value;
     const submitButton = e.target.querySelector('button[type="submit"]');
     
-    // Clear previous errors
     clearFormErrors('admin');
     
-    // Validate inputs
     if (!username) {
         showFormError('admin', 'Please enter your username');
         return;
@@ -381,19 +468,12 @@ function handleAdminLogin(e) {
         return;
     }
     
-    // Set loading state
     setButtonLoading(submitButton, true);
     
-    // Simulate API call delay
     setTimeout(() => {
-        // Check credentials
         const user = mockUsers.admins[username.toLowerCase()];
         
         if (user && user.password === password) {
-            // Login successful
-            console.log('Admin login successful:', { username: username.toLowerCase(), name: user.name, role: user.role });
-            
-            // Store login session
             sessionStorage.setItem('loggedInUser', JSON.stringify({
                 type: 'admin',
                 username: username.toLowerCase(),
@@ -402,61 +482,257 @@ function handleAdminLogin(e) {
             }));
             
             setButtonLoading(submitButton, false);
+            updateLoginSection(); // Update UI immediately
             closeAdminLogin();
             showSuccessModal(`Welcome, ${user.name}! Admin login successful.`);
             
-            // Update UI for logged in admin
-            updateUIForLoggedInUser('admin', user);
-            
-            // Handle any pending actions
             handlePendingAction();
-            
         } else {
-            // Login failed
             setButtonLoading(submitButton, false);
             showFormError('admin', 'Invalid username or password. Please try again.');
         }
-    }, 1500); // Simulate network delay
+    }, 1500);
 }
 
-// Update UI for logged in user
-function updateUIForLoggedInUser(type, user) {
-    if (type === 'student') {
-        console.log('Updating UI for logged in student:', user.name);
-    } else if (type === 'admin') {
-        console.log('Updating UI for logged in admin:', user.name, user.role);
-    }
-}
-
-// Forgot password functionality
-function forgotPassword(type) {
-    if (type === 'student') {
-        alert('Please contact the hostel administration or IT support to reset your student password.\n\nContact: hostel.support@mitsgwalior.in\nPhone: +91-XXX-XXX-XXXX');
-    } else if (type === 'admin') {
-        alert('Please contact the system administrator to reset your admin password.\n\nContact: admin@mitsgwalior.in\nPhone: +91-XXX-XXX-XXXX');
-    }
-}
-
-// Close modals when clicking outside
-window.addEventListener('click', function(event) {
-    const studentModal = document.getElementById('studentLoginModal');
-    const adminModal = document.getElementById('adminLoginModal');
-    const successModal = document.getElementById('successModal');
+// Signup and OTP functions
+function handleStudentSignup(e) {
+    e.preventDefault();
     
-    if (event.target === studentModal) {
+    const name = document.getElementById('signupName').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
+    const studentId = document.getElementById('signupStudentId').value.trim().toUpperCase();
+    const password = document.getElementById('signupPassword').value;
+    const confirmPassword = document.getElementById('signupConfirmPassword').value;
+    const submitButton = e.target.querySelector('button[type="submit"]');
+    
+    clearFormErrors('studentSignup');
+    
+    if (!name) {
+        showFormError('studentSignup', 'Please enter your full name');
+        return;
+    }
+    
+    if (!email || !validateEmail(email)) {
+        showFormError('studentSignup', 'Please enter a valid email address');
+        return;
+    }
+    
+    if (!studentId || !validateStudentId(studentId)) {
+        showFormError('studentSignup', 'Student ID must be at least 3 alphanumeric characters');
+        return;
+    }
+    
+    if (mockUsers.students[studentId]) {
+        showFormError('studentSignup', 'This Student ID is already taken');
+        return;
+    }
+    
+    if (!password || !validatePassword(password)) {
+        showFormError('studentSignup', 'Password must be at least 6 characters');
+        return;
+    }
+    
+    if (password !== confirmPassword) {
+        showFormError('studentSignup', 'Passwords do not match');
+        return;
+    }
+    
+    setButtonLoading(submitButton, true);
+    
+    setTimeout(() => {
+        const otp = generateOTP();
+        otpStore[email] = otp;
+        pendingSignups[email] = { name, studentId, password };
+        
+        console.log(`OTP sent to ${email}: ${otp}`);
+        
+        setButtonLoading(submitButton, false);
         closeStudentLogin();
+        openOtpModal();
+        
+        document.getElementById('otpError').textContent = `Demo OTP: ${otp}`;
+        document.getElementById('otpError').classList.add('show');
+    }, 1500);
+}
+
+function handleOtpVerification(e) {
+    e.preventDefault();
+    
+    const otp = document.getElementById('otpCode').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
+    const submitButton = e.target.querySelector('button[type="submit"]');
+    
+    clearFormErrors('otp');
+    
+    if (!otp || otp.length !== 6) {
+        showFormError('otp', 'Please enter a valid 6-digit OTP');
+        return;
     }
-    if (event.target === adminModal) {
-        closeAdminLogin();
+    
+    setButtonLoading(submitButton, true);
+    
+    setTimeout(() => {
+        if (otpStore[email] && otpStore[email] === otp) {
+            const userData = pendingSignups[email];
+            
+            mockUsers.students[userData.studentId] = {
+                password: userData.password,
+                name: userData.name,
+                room: 'Not Assigned'
+            };
+            
+            delete otpStore[email];
+            delete pendingSignups[email];
+            
+            setButtonLoading(submitButton, false);
+            closeOtpModal();
+            showSuccessModal(`Welcome ${userData.name}! Your account has been created successfully.`);
+            
+            sessionStorage.setItem('loggedInUser', JSON.stringify({
+                type: 'student',
+                id: userData.studentId,
+                name: userData.name,
+                room: 'Not Assigned'
+            }));
+            
+            updateLoginSection();
+        } else {
+            setButtonLoading(submitButton, false);
+            showFormError('otp', 'Invalid OTP. Please try again.');
+        }
+    }, 1000);
+}
+
+function generateOTP() {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+function resendOTP() {
+    const email = document.getElementById('signupEmail').value.trim();
+    if (email && pendingSignups[email]) {
+        const otp = generateOTP();
+        otpStore[email] = otp;
+        
+        console.log(`New OTP sent to ${email}: ${otp}`);
+        
+        document.getElementById('otpError').textContent = `New OTP sent. Demo OTP: ${otp}`;
+        document.getElementById('otpError').classList.add('show');
     }
-    if (event.target === successModal) {
-        closeSuccessModal();
+}
+
+// Logout functionality
+function logout() {
+    sessionStorage.removeItem('loggedInUser');
+    console.log('User logged out');
+    updateLoginSection();
+    window.location.reload();
+}
+
+// Quick action handlers
+function handleComplaintClick() {
+    const loggedInUser = sessionStorage.getItem('loggedInUser');
+    
+    if (!loggedInUser) {
+        alert('Please login to file a complaint.');
+        openStudentLogin();
+        sessionStorage.setItem('pendingAction', 'complaint');
+    } else {
+        showSuccessModal('Redirecting to Complaint Filing Page...');
+        setTimeout(() => {
+            window.location.href = 'complaints.html';
+        }, 1500);
     }
-});
+}
+
+function handleLeaveClick() {
+    const loggedInUser = sessionStorage.getItem('loggedInUser');
+    
+    if (!loggedInUser) {
+        alert('Please login to apply for leave.');
+        openStudentLogin();
+        sessionStorage.setItem('pendingAction', 'leave');
+    } else {
+        showSuccessModal('Redirecting to Leave Application Page...');
+        setTimeout(() => {
+            window.location.href = 'leave.html';
+        }, 1500);
+    }
+}
+
+function handleProfileClick() {
+    const loggedInUser = sessionStorage.getItem('loggedInUser');
+    
+    if (!loggedInUser) {
+        alert('Please login to view your profile.');
+        openStudentLogin();
+        sessionStorage.setItem('pendingAction', 'profile');
+    } else {
+        showSuccessModal('Redirecting to Profile Page...');
+        setTimeout(() => {
+            window.location.href = 'profile.html';
+        }, 1500);
+    }
+}
+
+function handleMaintenanceClick() {
+    const loggedInUser = sessionStorage.getItem('loggedInUser');
+    
+    if (!loggedInUser) {
+        alert('Please login to request maintenance.');
+        openStudentLogin();
+        sessionStorage.setItem('pendingAction', 'maintenance');
+    } else {
+        showSuccessModal('Redirecting to Maintenance Request Page...');
+        setTimeout(() => {
+            window.location.href = 'maintenance.html';
+        }, 1500);
+    }
+}
+
+function handleGuestRoomClick() {
+    showSuccessModal('Redirecting to Guest Room Booking Page...');
+    setTimeout(() => {
+        window.location.href = 'guestroom.html';
+    }, 1500);
+}
+
+function handlePendingAction() {
+    const pendingAction = sessionStorage.getItem('pendingAction');
+    
+    if (pendingAction) {
+        sessionStorage.removeItem('pendingAction');
+        
+        setTimeout(() => {
+            switch (pendingAction) {
+                case 'complaint':
+                    window.location.href = 'complaints.html';
+                    break;
+                case 'leave':
+                    window.location.href = 'leave.html';
+                    break;
+                case 'profile':
+                    window.location.href = 'profile.html';
+                    break;
+                case 'maintenance':
+                    window.location.href = 'maintenance.html';
+                    break;
+                default:
+                    console.log('Unknown pending action:', pendingAction);
+            }
+        }, 2000);
+    }
+}
+
+// Utility functions
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
 
 // Load student data
 function loadStudentData() {
-    // Check if user is already logged in
     const loggedInUser = sessionStorage.getItem('loggedInUser');
     if (loggedInUser) {
         const user = JSON.parse(loggedInUser);
@@ -500,139 +776,56 @@ function loadRecentComplaints() {
     console.log('Recent complaints loaded:', complaints);
 }
 
-// Quick action handlers with login checks
-function handleComplaintClick() {
-    console.log('File Complaint clicked...');
+// Close modals when clicking outside
+window.addEventListener('click', function(event) {
+    const studentModal = document.getElementById('studentLoginModal');
+    const adminModal = document.getElementById('adminLoginModal');
+    const successModal = document.getElementById('successModal');
+    const otpModal = document.getElementById('otpModal');
     
-    // Check if user is logged in
-    const loggedInUser = sessionStorage.getItem('loggedInUser');
-    
-    if (!loggedInUser) {
-        // User not logged in, show login prompt
-        alert('Please login to file a complaint.');
-        openStudentLogin();
+    if (event.target === studentModal) closeStudentLogin();
+    if (event.target === adminModal) closeAdminLogin();
+    if (event.target === successModal) closeSuccessModal();
+    if (event.target === otpModal) closeOtpModal();
+});
+
+// Add keyboard navigation for slider
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowLeft') previousSlide();
+    if (e.key === 'ArrowRight') nextSlide();
+    if (e.key === 'Escape') {
+        closeStudentLogin();
+        closeAdminLogin();
+        closeSuccessModal();
+        closeOtpModal();
+    }
+});
+
+// Add keyboard support for form submission
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        const activeModals = [
+            { id: 'studentLoginModal', form: 'studentLoginForm' },
+            { id: 'adminLoginModal', form: 'adminLoginForm' },
+            { id: 'otpModal', form: 'otpForm' }
+        ];
         
-        // Store the intended action for after login
-        sessionStorage.setItem('pendingAction', 'complaint');
-    } else {
-        // User is logged in, redirect to complaint page
-        console.log('Redirecting to complaints page...');
-        showSuccessModal('Redirecting to Complaint Filing Page...');
-        setTimeout(() => {
-            window.location.href = 'complaints.html';
-        }, 1500);
-    }
-}
-
-function handleLeaveClick() {
-    console.log('Apply for Leave clicked...');
-    
-    // Check if user is logged in
-    const loggedInUser = sessionStorage.getItem('loggedInUser');
-    
-    if (!loggedInUser) {
-        alert('Please login to apply for leave.');
-        openStudentLogin();
-        sessionStorage.setItem('pendingAction', 'leave');
-    } else {
-        console.log('Redirecting to leave application page...');
-        showSuccessModal('Redirecting to Leave Application Page...');
-        setTimeout(() => {
-            window.location.href = 'leave.html';
-        }, 1500);
-    }
-}
-
-function handleProfileClick() {
-    console.log('View Profile clicked...');
-    
-    const loggedInUser = sessionStorage.getItem('loggedInUser');
-    
-    if (!loggedInUser) {
-        alert('Please login to view your profile.');
-        openStudentLogin();
-        sessionStorage.setItem('pendingAction', 'profile');
-    } else {
-        console.log('Redirecting to profile page...');
-        showSuccessModal('Redirecting to Profile Page...');
-        setTimeout(() => {
-            window.location.href = 'profile.html';
-        }, 1500);
-    }
-}
-
-function handleMaintenanceClick() {
-    console.log('Maintenance Request clicked...');
-    
-    const loggedInUser = sessionStorage.getItem('loggedInUser');
-    
-    if (!loggedInUser) {
-        alert('Please login to request maintenance.');
-        openStudentLogin();
-        sessionStorage.setItem('pendingAction', 'maintenance');
-    } else {
-        console.log('Redirecting to maintenance page...');
-        showSuccessModal('Redirecting to Maintenance Request Page...');
-        setTimeout(() => {
-            window.location.href = 'maintenance.html';
-        }, 1500);
-    }
-}
-
-function handleGuestRoomClick() {
-    console.log('Book Guest Room clicked...');
-    console.log('Redirecting to guest room booking page...');
-    showSuccessModal('Redirecting to Guest Room Booking Page...');
-    setTimeout(() => {
-        window.location.href = 'guestroom.html';
-    }, 1500);
-}
-
-// Handle pending actions after successful login
-function handlePendingAction() {
-    const pendingAction = sessionStorage.getItem('pendingAction');
-    
-    if (pendingAction) {
-        // Clear the pending action
-        sessionStorage.removeItem('pendingAction');
-        
-        // Execute the pending action
-        setTimeout(() => {
-            switch (pendingAction) {
-                case 'complaint':
-                    window.location.href = 'complaints.html';
-                    break;
-                case 'leave':
-                    window.location.href = 'leave.html';
-                    break;
-                case 'profile':
-                    window.location.href = 'profile.html';
-                    break;
-                case 'maintenance':
-                    window.location.href = 'maintenance.html';
-                    break;
-                default:
-                    console.log('Unknown pending action:', pendingAction);
+        activeModals.forEach(modal => {
+            const modalElement = document.getElementById(modal.id);
+            if (modalElement && modalElement.style.display === 'block') {
+                const form = document.getElementById(modal.form);
+                if (form) form.dispatchEvent(new Event('submit'));
             }
-        }, 2000);
+        });
     }
-}
+});
 
-// Utility functions
-function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-}
-
-// Logout functionality
-function logout() {
-    sessionStorage.removeItem('loggedInUser');
-    console.log('User logged out');
-    // Refresh page or redirect to login
-    location.reload();
-}
+// Sync login state across tabs
+window.addEventListener('storage', function(event) {
+    if (event.key === 'loggedInUser') {
+        updateLoginSection();
+    }
+});
 
 // Export functions for global access
 window.nextSlide = nextSlide;
@@ -650,60 +843,9 @@ window.handleLeaveClick = handleLeaveClick;
 window.handleProfileClick = handleProfileClick;
 window.handleMaintenanceClick = handleMaintenanceClick;
 window.handleGuestRoomClick = handleGuestRoomClick;
-
-// Add smooth scrolling for anchor links
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
-});
-
-// Add keyboard navigation for slider
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'ArrowLeft') {
-        previousSlide();
-    } else if (e.key === 'ArrowRight') {
-        nextSlide();
-    }
-    
-    // ESC key to close modals
-    if (e.key === 'Escape') {
-        closeStudentLogin();
-        closeAdminLogin();
-        closeSuccessModal();
-    }
-});
-
-// Add keyboard support for form submission
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-        const studentModal = document.getElementById('studentLoginModal');
-        const adminModal = document.getElementById('adminLoginModal');
-        
-        if (studentModal && studentModal.style.display === 'block') {
-            const form = document.getElementById('studentLoginForm');
-            if (form) {
-                form.dispatchEvent(new Event('submit'));
-            }
-        }
-        
-        if (adminModal && adminModal.style.display === 'block') {
-            const form = document.getElementById('adminLoginForm');
-            if (form) {
-                form.dispatchEvent(new Event('submit'));
-            }
-        }
-    }
-});
+window.switchTab = switchTab;
+window.resendOTP = resendOTP;
+window.closeOtpModal = closeOtpModal;
 
 console.log('Hostel Management System JavaScript loaded successfully');
 console.log('Demo Login Credentials:');
