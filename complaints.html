@@ -3,146 +3,888 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Complaint - Hostel Management</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Complaint Management - Hostel Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .complaint-form-container {
-            max-width: 800px;
-            margin: 30px auto;
-            padding: 0 20px;
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4bb543;
+            --warning-color: #f0ad4e;
+            --danger-color: #d9534f;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
         }
         
-        .complaint-form {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--dark-color);
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 20px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .tab-container {
             background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            border-radius: var(--border-radius);
+            padding: 8px;
+            box-shadow: var(--box-shadow);
+            display: flex;
+            gap: 4px;
+        }
+        
+        .tab-btn {
+            padding: 12px 24px;
+            border: none;
+            background: transparent;
+            color: #6c757d;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+        }
+        
+        .tab-btn:hover:not(.active) {
+            background: #f8f9fa;
+            color: var(--primary-color);
+        }
+        
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            position: relative;
+            overflow: hidden;
+            min-height: 600px;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-color), var(--accent-color));
+        }
+        
+        .slide {
+            display: none;
+            animation: slideIn 0.4s ease;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h2 i {
+            color: var(--accent-color);
+        }
+        
+        .subtitle {
+            margin-bottom: 30px;
+            color: #6c757d;
+            font-size: 16px;
+            line-height: 1.6;
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 600;
-            color: #333;
+            color: #495057;
+            font-size: 15px;
         }
         
         .form-group input, .form-group select, .form-group textarea {
             width: 100%;
-            padding: 12px 15px;
+            padding: 14px 18px;
             border: 2px solid #e1e8ed;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border-color 0.3s ease;
+            border-radius: var(--border-radius);
+            font-size: 15px;
+            transition: var(--transition);
+            background-color: #f8f9fa;
         }
         
         .form-group textarea {
-            min-height: 120px;
+            min-height: 150px;
             resize: vertical;
         }
         
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--accent-color);
+            background-color: white;
+            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
         }
         
-        .submit-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .btn {
             color: white;
             border: none;
-            padding: 15px 30px;
-            border-radius: 8px;
+            padding: 16px 30px;
+            border-radius: var(--border-radius);
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.3s ease;
-            width: 100%;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
         }
         
-        .submit-btn:hover {
-            transform: translateY(-2px);
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
         }
         
-        .back-btn {
-            background: #6c757d;
-            color: white;
-            border: none;
-            padding: 10px 20px;
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.2);
+        }
+        
+        .btn-dark {
+            background: var(--dark-color);
+        }
+        
+        .btn-dark:hover {
+            background: #343a40;
+            transform: translateX(-3px);
+        }
+        
+        .btn-accent {
+            background: var(--accent-color);
+            padding: 12px 20px;
+            font-size: 14px;
+        }
+        
+        .btn-success {
+            background: var(--success-color);
+            padding: 12px 20px;
+            font-size: 14px;
+        }
+        
+        .otp-section {
+            margin: 25px 0;
+            padding: 20px;
+            background-color: #f1f8ff;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--accent-color);
+            display: none;
+        }
+        
+        .otp-section h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .otp-input-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .otp-input {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 18px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+        
+        .otp-input:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+        
+        .alert {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: var(--border-radius);
+            display: none;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+        
+        /* Complaint List Styles */
+        .complaints-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .filter-container {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .filter-select {
+            padding: 8px 12px;
+            border: 2px solid #e1e8ed;
             border-radius: 8px;
             font-size: 14px;
-            cursor: pointer;
-            margin-bottom: 20px;
-            text-decoration: none;
-            display: inline-block;
         }
         
-        .back-btn:hover {
-            background: #5a6268;
+        .complaint-item {
+            background: #f8f9fa;
+            border: 2px solid #e1e8ed;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .complaint-item:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .complaint-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        
+        .complaint-title {
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 16px;
+        }
+        
+        .complaint-id {
+            font-size: 12px;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-resolved {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-inprogress {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+        
+        .complaint-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+        
+        .complaint-description {
+            color: #495057;
+            line-height: 1.5;
+            max-height: 60px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 15px;
+        }
+        
+        .complaint-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 8px;
+        }
+        
+        .btn-danger {
+            background: var(--danger-color);
+        }
+        
+        .btn-danger:hover {
+            background: #c9302c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(217, 83, 79, 0.3);
+        }
+        
+        .btn-warning {
+            background: var(--warning-color);
+        }
+        
+        .btn-warning:hover {
+            background: #ec971f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(240, 173, 78, 0.3);
+        }
+        
+        .btn-success {
+            background: var(--success-color);
+        }
+        
+        .btn-success:hover {
+            background: #3fa237;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(75, 181, 67, 0.3);
+        }
+        
+        .btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn:disabled:hover {
+            background: #6c757d;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .file-upload-area {
+            border: 3px dashed #e1e8ed;
+            border-radius: var(--border-radius);
+            padding: 40px 20px;
+            text-align: center;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 15px;
+        }
+        
+        .file-upload-area:hover {
+            border-color: var(--accent-color);
+            background-color: #f1f8ff;
+        }
+        
+        .file-upload-area.dragover {
+            border-color: var(--primary-color);
+            background-color: #e8f2ff;
+            transform: scale(1.02);
+        }
+        
+        .file-upload-area i {
+            font-size: 48px;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+        
+        .file-upload-area p {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .file-info {
+            font-size: 14px;
+            color: #6c757d;
+        }
+        
+        .image-preview-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .image-preview {
+            position: relative;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+        
+        .image-preview:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        .image-preview img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+        
+        .image-remove {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: var(--transition);
+        }
+        
+        .image-remove:hover {
+            background: #c9302c;
+            transform: scale(1.1);
+        }
+        
+        .complaint-images {
+            margin-top: 15px;
+        }
+        
+        .complaint-images h4 {
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            font-size: 14px;
+        }
+        
+        .complaint-image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px;
+        }
+        
+        .complaint-image-thumb {
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .complaint-image-thumb:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .complaint-image-thumb img {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+        }
+        
+        .image-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+        }
+        
+        .image-modal img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: var(--border-radius);
+        }
+        
+        .image-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .image-modal-close:hover {
+            color: var(--accent-color);
+            transform: scale(1.1);
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal {
+            background: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            animation: modalSlideIn 0.3s ease;
+        }
+        
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .modal h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .modal p {
+            color: #6c757d;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+        
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #dee2e6;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .card {
+                padding: 25px;
+            }
+            
+            .tab-container {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .complaints-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .filter-container {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .complaint-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .complaint-meta {
+                flex-direction: column;
+                gap: 5px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="complaint-form-container">
-        <a href="index.html" class="back-btn">← Back to Dashboard</a>
-        
-        <div class="complaint-form">
-            <h2>�📝 File a Complaint</h2>
-            <p style="margin-bottom: 25px; color: #666;">Please provide details about your complaint. We'll address it as soon as possible.</p>
+    <div class="container">
+        <div class="navigation">
+            <a href="index.html" class="btn btn-dark">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
             
-            <form id="complaintForm">
-                <div class="form-group">
-                    <label for="studentName">Student Name</label>
-                    <input type="text" id="studentName" name="studentName" required readonly>
+            <div class="tab-container">
+                <button class="tab-btn active" onclick="switchTab('register')">
+                    <i class="fas fa-plus-circle"></i> Register Complaint
+                </button>
+                <button class="tab-btn" onclick="switchTab('view')">
+                    <i class="fas fa-list"></i> View Complaints
+                </button>
+            </div>
+        </div>
+        
+        <div class="card">
+            <!-- Register Complaint Slide -->
+            <div id="registerSlide" class="slide active">
+                <h2><i class="fas fa-exclamation-circle"></i> File a Complaint</h2>
+                <p class="subtitle">Please provide details about your complaint. We'll address it as soon as possible. Your feedback helps us improve our services.</p>
+                
+                <form id="complaintForm">
+                    <div class="form-group">
+                        <label for="studentName">Student Name</label>
+                        <input type="text" id="studentName" name="studentName" required readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="roomNumber">Room Number</label>
+                        <input type="text" id="roomNumber" name="roomNumber" required readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="complaintType">Complaint Type</label>
+                        <select id="complaintType" name="complaintType" required>
+                            <option value="">Select complaint type</option> 
+                            <option value="security">Electrical</option> 
+                            <option value="cleanliness">Cleanliness</option>
+                            <option value="facility">Internet And Wi-FI </option>
+                            <option value="food">Mess/Food Quality</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">Complaint Details</label>
+                        <textarea id="description" name="description" placeholder="Please provide detailed information about your complaint including when it started, how it affects you, and any other relevant details..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="complaintImages">Attach Images (Optional)</label>
+                        <div class="file-upload-area" id="fileUploadArea">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Click to upload images or drag and drop</p>
+                            <span class="file-info">Supported formats: JPG, PNG, GIF (Max 5MB each)</span>
+                            <input type="file" id="complaintImages" name="complaintImages" accept="image/*" multiple style="display: none;">
+                        </div>
+                        <div id="imagePreview" class="image-preview-container"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="agreeTerms" required> 
+                            I confirm that the information provided is accurate and I want to proceed with submitting this complaint.
+                        </label>
+                    </div>
+                    
+                    <div class="otp-section" id="otpSection">
+                        <h3><i class="fas fa-shield-alt"></i> OTP Verification</h3>
+                        <p>For security purposes, please verify your identity with the OTP sent to your registered mobile number.</p>
+                        
+                        <div class="otp-input-group">
+                            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
+                            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
+                            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
+                            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
+                            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
+                            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
+                        </div>
+                        
+                        <button type="button" class="btn btn-accent" id="sendOtpBtn">
+                            <i class="fas fa-paper-plane"></i> Send OTP
+                        </button>
+                        
+                        <button type="button" class="btn btn-success" id="verifyOtpBtn" disabled>
+                            <i class="fas fa-check-circle"></i> Verify OTP
+                        </button>
+                        
+                        <div class="alert" id="otpStatus"></div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" id="submitBtn" disabled>
+                        <i class="fas fa-paper-plane"></i> Submit Complaint
+                    </button>
+                </form>
+            </div>
+            
+            <!-- View Complaints Slide -->
+            <div id="viewSlide" class="slide">
+                <div class="complaints-header">
+                    <h2><i class="fas fa-list"></i> My Complaints</h2>
+                    <div class="filter-container">
+                        <select id="statusFilter" class="filter-select">
+                            <option value="">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="inprogress">In Progress</option>
+                            <option value="resolved">Resolved</option>
+                        </select>
+                        <select id="typeFilter" class="filter-select">
+                            <option value="">All Types</option>
+                            <option value="noise">Electrical</option>
+                            <option value="cleanliness">Cleanliness</option>
+                            <option value="roommate">Internet And Wi-Fi</option>
+                            <option value="food">Food Quality</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
                 </div>
                 
-                <div class="form-group">
-                    <label for="roomNumber">Room Number</label>
-                    <input type="text" id="roomNumber" name="roomNumber" required readonly>
+                <div id="complaintsContainer">
+                    <!-- Complaints will be loaded here -->
                 </div>
-                
-                <div class="form-group">
-                    <label for="complaintType">Complaint Type</label>
-                    <select id="complaintType" name="complaintType" required>
-                        <option value="">Select complaint type</option>
-                        <option value="maintenance">Maintenance Issue</option>
-                        <option value="cleanliness">Cleanliness</option>
-                        <option value="security">Security</option>
-                        <option value="noise">Noise Complaint</option>
-                        <option value="facility">Facility Issue</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="priority">Priority Level</label>
-                    <select id="priority" name="priority" required>
-                        <option value="">Select priority</option>
-                        <option value="low">Low</option>
-                        <option value="medium">Medium</option>
-                        <option value="high">High</option>
-                        <option value="urgent">Urgent</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="subject">Subject</label>
-                    <input type="text" id="subject" name="subject" placeholder="Brief description of the issue" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="description">Detailed Description</label>
-                    <textarea id="description" name="description" placeholder="Please provide detailed information about your complaint..." required></textarea>
-                </div>
-                
-                <button type="submit" class="submit-btn">Submit Complaint</button>
-            </form>
+            </div>
         </div>
     </div>
     
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal-overlay">
+        <div class="modal">
+            <h3><i class="fas fa-exclamation-triangle" style="color: var(--danger-color);"></i> Confirm Delete</h3>
+            <p>Are you sure you want to delete this complaint? This action cannot be undone.</p>
+            <div class="modal-actions">
+                <button class="btn btn-danger btn-small" onclick="confirmDelete()">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+                <button class="btn btn-dark btn-small" onclick="closeModal()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Approve Confirmation Modal -->
+    <div id="approveModal" class="modal-overlay">
+        <div class="modal">
+            <h3><i class="fas fa-check-circle" style="color: var(--success-color);"></i> Approve Complaint</h3>
+            <p>Mark this complaint as approved and move it to "In Progress" status?</p>
+            <div class="modal-actions">
+                <button class="btn btn-success btn-small" onclick="confirmApprove()">
+                    <i class="fas fa-check"></i> Approve
+                </button>
+                <button class="btn btn-dark btn-small" onclick="closeModal()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Resolve Confirmation Modal -->
+    <div id="resolveModal" class="modal-overlay">
+        <div class="modal">
+            <h3><i class="fas fa-check-double" style="color: var(--success-color);"></i> Resolve Complaint</h3>
+            <p>Mark this complaint as resolved? This indicates the issue has been completely addressed.</p>
+            <div class="modal-actions">
+                <button class="btn btn-success btn-small" onclick="confirmResolve()">
+                    <i class="fas fa-check-double"></i> Resolve
+                </button>
+                <button class="btn btn-dark btn-small" onclick="closeModal()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Image Modal -->
+    <div id="imageModal" class="image-modal">
+        <span class="image-modal-close" onclick="closeImageModal()">&times;</span>
+        <img id="modalImage" src="" alt="Complaint Image">
+    </div>
+    
     <script>
+        // Global variables for modal actions
+        let currentComplaintId = null;
+        let uploadedImages = [];
+        
+        // Tab switching functionality
+        function switchTab(tab) {
+            const registerSlide = document.getElementById('registerSlide');
+            const viewSlide = document.getElementById('viewSlide');
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            
+            // Remove active class from all tabs
+            tabBtns.forEach(btn => btn.classList.remove('active'));
+            
+            if (tab === 'register') {
+                registerSlide.classList.add('active');
+                viewSlide.classList.remove('active');
+                tabBtns[0].classList.add('active');
+            } else {
+                registerSlide.classList.remove('active');
+                viewSlide.classList.add('active');
+                tabBtns[1].classList.add('active');
+                loadComplaints();
+            }
+        }
+        
         // Load user data from session storage
         document.addEventListener('DOMContentLoaded', function() {
             const loggedInUser = sessionStorage.getItem('loggedInUser');
@@ -151,9 +893,194 @@
                 document.getElementById('studentName').value = user.name || '';
                 document.getElementById('roomNumber').value = user.room || '';
             } else {
-                // Redirect to login if not logged in
-                alert('Please login first');
-                window.location.href = 'index.html';
+                // For demo purposes, set default values
+                document.getElementById('studentName').value = 'John Doe';
+                document.getElementById('roomNumber').value = 'A-101';
+            }
+            
+            // Setup file upload functionality
+            setupFileUpload();
+        });
+        
+        // File upload functionality
+        function setupFileUpload() {
+            const fileUploadArea = document.getElementById('fileUploadArea');
+            const fileInput = document.getElementById('complaintImages');
+            const imagePreview = document.getElementById('imagePreview');
+            
+            // Click to upload
+            fileUploadArea.addEventListener('click', () => {
+                fileInput.click();
+            });
+            
+            // Drag and drop
+            fileUploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                fileUploadArea.classList.add('dragover');
+            });
+            
+            fileUploadArea.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                fileUploadArea.classList.remove('dragover');
+            });
+            
+            fileUploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileUploadArea.classList.remove('dragover');
+                const files = Array.from(e.dataTransfer.files);
+                handleFiles(files);
+            });
+            
+            // File input change
+            fileInput.addEventListener('change', (e) => {
+                const files = Array.from(e.target.files);
+                handleFiles(files);
+            });
+        }
+        
+        function handleFiles(files) {
+            const imagePreview = document.getElementById('imagePreview');
+            
+            files.forEach(file => {
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    alert('Please upload only image files.');
+                    return;
+                }
+                
+                // Validate file size (5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File size should be less than 5MB.');
+                    return;
+                }
+                
+                // Create file reader
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const imageData = {
+                        id: Date.now() + Math.random(),
+                        name: file.name,
+                        data: e.target.result
+                    };
+                    
+                    uploadedImages.push(imageData);
+                    displayImagePreview(imageData);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+        
+        function displayImagePreview(imageData) {
+            const imagePreview = document.getElementById('imagePreview');
+            
+            const previewDiv = document.createElement('div');
+            previewDiv.className = 'image-preview';
+            previewDiv.innerHTML = `
+                <img src="${imageData.data}" alt="${imageData.name}">
+                <button type="button" class="image-remove" onclick="removeImage('${imageData.id}')">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            imagePreview.appendChild(previewDiv);
+        }
+        
+        function removeImage(imageId) {
+            uploadedImages = uploadedImages.filter(img => img.id != imageId);
+            
+            // Remove from preview
+            const imagePreview = document.getElementById('imagePreview');
+            const previewElements = imagePreview.children;
+            
+            for (let i = 0; i < previewElements.length; i++) {
+                const img = previewElements[i].querySelector('img');
+                const removeBtn = previewElements[i].querySelector('.image-remove');
+                
+                if (removeBtn.getAttribute('onclick').includes(imageId)) {
+                    imagePreview.removeChild(previewElements[i]);
+                    break;
+                }
+            }
+        }
+        
+        // OTP functionality
+        const otpSection = document.getElementById('otpSection');
+        const sendOtpBtn = document.getElementById('sendOtpBtn');
+        const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+        const otpStatus = document.getElementById('otpStatus');
+        const otpInputs = document.querySelectorAll('.otp-input');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        // Auto-focus and move between OTP inputs
+        otpInputs.forEach((input, index) => {
+            input.addEventListener('input', () => {
+                if (input.value.length === 1 && index < otpInputs.length - 1) {
+                    otpInputs[index + 1].focus();
+                }
+                checkOtpFilled();
+            });
+            
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && index > 0 && input.value.length === 0) {
+                    otpInputs[index - 1].focus();
+                }
+            });
+        });
+        
+        function checkOtpFilled() {
+            let allFilled = true;
+            otpInputs.forEach(input => {
+                if (input.value === '') allFilled = false;
+            });
+            verifyOtpBtn.disabled = !allFilled;
+        }
+        
+        // Show OTP section when form is filled
+        document.getElementById('complaintForm').addEventListener('change', function() {
+            const formValid = this.checkValidity();
+            const termsChecked = document.getElementById('agreeTerms').checked;
+            
+            if (formValid && termsChecked) {
+                otpSection.style.display = 'block';
+            } else {
+                otpSection.style.display = 'none';
+                submitBtn.disabled = true;
+            }
+        });
+        
+        // Send OTP
+        sendOtpBtn.addEventListener('click', function() {
+            otpStatus.textContent = 'OTP sent to your registered mobile number (demo: 123456)';
+            otpStatus.className = 'alert alert-success';
+            otpStatus.style.display = 'block';
+            
+            // Auto-fill for demo purposes
+            setTimeout(() => {
+                otpInputs[0].value = '1';
+                otpInputs[1].value = '2';
+                otpInputs[2].value = '3';
+                otpInputs[3].value = '4';
+                otpInputs[4].value = '5';
+                otpInputs[5].value = '6';
+                checkOtpFilled();
+            }, 500);
+        });
+        
+        // Verify OTP
+        verifyOtpBtn.addEventListener('click', function() {
+            let otp = '';
+            otpInputs.forEach(input => {
+                otp += input.value;
+            });
+            
+            if (otp === '123456') {
+                otpStatus.textContent = 'OTP verified successfully!';
+                otpStatus.className = 'alert alert-success';
+                submitBtn.disabled = false;
+            } else {
+                otpStatus.textContent = 'Invalid OTP. Please try again.';
+                otpStatus.className = 'alert alert-error';
+                submitBtn.disabled = true;
             }
         });
         
@@ -162,22 +1089,317 @@
             e.preventDefault();
             
             const formData = new FormData(this);
+            
             const complaintData = {
+                id: Date.now().toString(),
                 studentName: formData.get('studentName'),
                 roomNumber: formData.get('roomNumber'),
                 complaintType: formData.get('complaintType'),
-                priority: formData.get('priority'),
-                subject: formData.get('subject'),
                 description: formData.get('description'),
+                images: uploadedImages,
+                status: 'pending',
                 timestamp: new Date().toISOString()
             };
             
-            // In a real application, this would be sent to the server
-            console.log('Complaint submitted:', complaintData);
+            // Save to localStorage
+            let complaints = JSON.parse(localStorage.getItem('complaints') || '[]');
+            complaints.push(complaintData);
+            localStorage.setItem('complaints', JSON.stringify(complaints));
             
-            alert('Complaint submitted successfully! We will address it soon.');
-            window.location.href = 'index.html';
+            // Reset form
+            this.reset();
+            uploadedImages = [];
+            document.getElementById('imagePreview').innerHTML = '';
+            otpSection.style.display = 'none';
+            submitBtn.disabled = true;
+            otpInputs.forEach(input => input.value = '');
+            
+            // Show success message and switch to view tab
+            alert('Complaint submitted successfully!');
+            switchTab('view');
         });
+        
+        // Load and display complaints
+        function loadComplaints() {
+            const complaints = JSON.parse(localStorage.getItem('complaints') || '[]');
+            const container = document.getElementById('complaintsContainer');
+            const statusFilter = document.getElementById('statusFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            
+            // Filter complaints
+            let filteredComplaints = complaints;
+            if (statusFilter) {
+                filteredComplaints = filteredComplaints.filter(c => c.status === statusFilter);
+            }
+            if (typeFilter) {
+                filteredComplaints = filteredComplaints.filter(c => c.complaintType === typeFilter);
+            }
+            
+            if (filteredComplaints.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h3>No complaints found</h3>
+                        <p>You haven't filed any complaints yet or no complaints match your filters.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sort by timestamp (newest first)
+            filteredComplaints.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            container.innerHTML = filteredComplaints.map(complaint => {
+                const date = new Date(complaint.timestamp).toLocaleDateString();
+                const time = new Date(complaint.timestamp).toLocaleTimeString();
+                
+                // Determine available actions based on status
+                let actionButtons = '';
+                if (complaint.status === 'pending') {
+                    actionButtons = `
+                        <button class="btn btn-success btn-small" onclick="showApproveModal('${complaint.id}')">
+                            <i class="fas fa-check"></i> Approve
+                        </button>
+                        <button class="btn btn-danger btn-small" onclick="showDeleteModal('${complaint.id}')">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    `;
+                } else if (complaint.status === 'inprogress') {
+                    actionButtons = `
+                        <button class="btn btn-success btn-small" onclick="showResolveModal('${complaint.id}')">
+                            <i class="fas fa-check-double"></i> Resolve
+                        </button>
+                        <button class="btn btn-danger btn-small" onclick="showDeleteModal('${complaint.id}')">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    `;
+                } else if (complaint.status === 'resolved') {
+                    actionButtons = `
+                        <button class="btn btn-danger btn-small" onclick="showDeleteModal('${complaint.id}')">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                        <button class="btn btn-dark btn-small" disabled>
+                            <i class="fas fa-check-double"></i> Resolved
+                        </button>
+                    `;
+                }
+                
+                // Display images if available
+                let imagesHtml = '';
+                if (complaint.images && complaint.images.length > 0) {
+                    imagesHtml = `
+                        <div class="complaint-images">
+                            <h4><i class="fas fa-images"></i> Attached Images (${complaint.images.length})</h4>
+                            <div class="complaint-image-grid">
+                                ${complaint.images.map(img => `
+                                    <div class="complaint-image-thumb" onclick="showImageModal('${img.data}')">
+                                        <img src="${img.data}" alt="${img.name}">
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                return `
+                    <div class="complaint-item">
+                        <div class="complaint-header">
+                            <div>
+                                <div class="complaint-id">ID: ${complaint.id}</div>
+                                <div class="complaint-title">${complaint.complaintType.charAt(0).toUpperCase() + complaint.complaintType.slice(1)} Issue</div>
+                            </div>
+                            <span class="status-badge status-${complaint.status}">
+                                ${complaint.status.charAt(0).toUpperCase() + complaint.status.slice(1)}
+                            </span>
+                        </div>
+                        <div class="complaint-meta">
+                            <span><i class="fas fa-user"></i> ${complaint.studentName}</span>
+                            <span><i class="fas fa-door-open"></i> Room ${complaint.roomNumber}</span>
+                            <span><i class="fas fa-calendar"></i> ${date} ${time}</span>
+                        </div>
+                        <div class="complaint-description">
+                            ${complaint.description}
+                        </div>
+                        ${imagesHtml}
+                        <div class="complaint-actions">
+                            ${actionButtons}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Add event listeners for filters
+        document.getElementById('statusFilter').addEventListener('change', loadComplaints);
+        document.getElementById('typeFilter').addEventListener('change', loadComplaints);
+        
+        // Modal functions
+        function showDeleteModal(complaintId) {
+            currentComplaintId = complaintId;
+            document.getElementById('deleteModal').style.display = 'flex';
+        }
+        
+        function showApproveModal(complaintId) {
+            currentComplaintId = complaintId;
+            document.getElementById('approveModal').style.display = 'flex';
+        }
+        
+        function showResolveModal(complaintId) {
+            currentComplaintId = complaintId;
+            document.getElementById('resolveModal').style.display = 'flex';
+        }
+        
+        function closeModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+            document.getElementById('approveModal').style.display = 'none';
+            document.getElementById('resolveModal').style.display = 'none';
+            currentComplaintId = null;
+        }
+        
+        function confirmDelete() {
+            if (currentComplaintId) {
+                let complaints = JSON.parse(localStorage.getItem('complaints') || '[]');
+                complaints = complaints.filter(c => c.id !== currentComplaintId);
+                localStorage.setItem('complaints', JSON.stringify(complaints));
+                loadComplaints();
+                closeModal();
+                
+                // Show success message
+                const successMsg = document.createElement('div');
+                successMsg.className = 'alert alert-success';
+                successMsg.style.position = 'fixed';
+                successMsg.style.top = '20px';
+                successMsg.style.right = '20px';
+                successMsg.style.zIndex = '9999';
+                successMsg.style.minWidth = '300px';
+                successMsg.innerHTML = '<i class="fas fa-check-circle"></i> Complaint deleted successfully!';
+                document.body.appendChild(successMsg);
+                
+                setTimeout(() => {
+                    document.body.removeChild(successMsg);
+                }, 3000);
+            }
+        }
+        
+        function confirmApprove() {
+            if (currentComplaintId) {
+                let complaints = JSON.parse(localStorage.getItem('complaints') || '[]');
+                const complaintIndex = complaints.findIndex(c => c.id === currentComplaintId);
+                
+                if (complaintIndex !== -1) {
+                    complaints[complaintIndex].status = 'inprogress';
+                    localStorage.setItem('complaints', JSON.stringify(complaints));
+                    loadComplaints();
+                    closeModal();
+                    
+                    // Show success message
+                    const successMsg = document.createElement('div');
+                    successMsg.className = 'alert alert-success';
+                    successMsg.style.position = 'fixed';
+                    successMsg.style.top = '20px';
+                    successMsg.style.right = '20px';
+                    successMsg.style.zIndex = '9999';
+                    successMsg.style.minWidth = '300px';
+                    successMsg.innerHTML = '<i class="fas fa-check-circle"></i> Complaint approved and moved to In Progress!';
+                    document.body.appendChild(successMsg);
+                    
+                    setTimeout(() => {
+                        document.body.removeChild(successMsg);
+                    }, 3000);
+                }
+            }
+        }
+        
+        function confirmResolve() {
+            if (currentComplaintId) {
+                let complaints = JSON.parse(localStorage.getItem('complaints') || '[]');
+                const complaintIndex = complaints.findIndex(c => c.id === currentComplaintId);
+                
+                if (complaintIndex !== -1) {
+                    complaints[complaintIndex].status = 'resolved';
+                    localStorage.setItem('complaints', JSON.stringify(complaints));
+                    loadComplaints();
+                    closeModal();
+                    
+                    // Show success message
+                    const successMsg = document.createElement('div');
+                    successMsg.className = 'alert alert-success';
+                    successMsg.style.position = 'fixed';
+                    successMsg.style.top = '20px';
+                    successMsg.style.right = '20px';
+                    successMsg.style.zIndex = '9999';
+                    successMsg.style.minWidth = '300px';
+                    successMsg.innerHTML = '<i class="fas fa-check-circle"></i> Complaint marked as resolved!';
+                    document.body.appendChild(successMsg);
+                    
+                    setTimeout(() => {
+                        document.body.removeChild(successMsg);
+                    }, 3000);
+                }
+            }
+        }
+        
+        // Close modal when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal-overlay')) {
+                closeModal();
+            }
+        });
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+                closeImageModal();
+            }
+        });
+        
+        // Image modal functions
+        function showImageModal(imageSrc) {
+            document.getElementById('modalImage').src = imageSrc;
+            document.getElementById('imageModal').style.display = 'flex';
+        }
+        
+        function closeImageModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+        
+        // Add some demo complaints for testing
+        if (!localStorage.getItem('complaints')) {
+            const demoComplaints = [
+                {
+                    id: '1703123456789',
+                    studentName: 'John Doe',
+                    roomNumber: 'A-101',
+                    complaintType: 'maintenance',
+                    description: 'The air conditioning in my room is not working properly. It makes loud noises and doesn\'t cool the room adequately.',
+                    images: [],
+                    status: 'pending',
+                    timestamp: new Date(Date.now() - 86400000).toISOString() // 1 day ago
+                },
+                {
+                    id: '1703123456790',
+                    studentName: 'John Doe',
+                    roomNumber: 'A-101',
+                    complaintType: 'cleanliness',
+                    description: 'The common washroom on my floor has not been cleaned for several days. It needs immediate attention.',
+                    images: [],
+                    status: 'inprogress',
+                    timestamp: new Date(Date.now() - 172800000).toISOString() // 2 days ago
+                },
+                {
+                    id: '1703123456791',
+                    studentName: 'John Doe',
+                    roomNumber: 'A-101',
+                    complaintType: 'food',
+                    description: 'The food quality in the mess has been poor lately. The vegetables are not fresh and the rice is often undercooked.',
+                    images: [],
+                    status: 'resolved',
+                    timestamp: new Date(Date.now() - 432000000).toISOString() // 5 days ago
+                }
+            ];
+            localStorage.setItem('complaints', JSON.stringify(demoComplaints));
+        }
     </script>
 </body>
 </html>
