@@ -515,6 +515,7 @@ body {
   margin-bottom: 5px;
 }
 
+/* Update status classes */
 .status-pending {
   background-color: #fff3cd;
   color: #856404;
@@ -524,9 +525,18 @@ body {
   font-weight: 600;
 }
 
-.status-progress {
+.status-in-progress {
   background-color: #cce5ff;
   color: #0066cc;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.status-resolved {
+  background-color: #d4edda;
+  color: #155724;
   padding: 3px 8px;
   border-radius: 12px;
   font-size: 10px;
@@ -1054,4 +1064,50 @@ body {
 
 .logout-btn:hover {
     background-color: rgba(220, 53, 69, 0.4);
+}
+/* Add to style.css */
+.complaint-details {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.complaint-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.like-btn {
+  background: transparent;
+  border: 1px solid #e1e8ed;
+  border-radius: 15px;
+  padding: 4px 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.like-btn:hover {
+  background-color: #f5f6fa;
+  border-color: #667eea;
+}
+
+.like-icon {
+  font-size: 14px;
+}
+
+.like-count {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.like-btn.liked {
+  background-color: #e3f2fd;
+  border-color: #2196F3;
+}
+
+.like-btn.liked .like-icon {
+  color: #2196F3;
 }

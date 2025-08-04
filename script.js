@@ -6,10 +6,10 @@ const totalSlides = 4;
 const mockUsers = {
     students: {
         'ST001': { password: 'pass123', name: 'ANKIT GURJAR', room: 'A-101' },
-        'ST002': { password: 'student123', name: 'RAHUL SHARMA', room: 'A-101' },
-        'ST003': { password: 'mypass456', name: 'PRIYA PATEL', room: 'A-102' },
-        'ST004': { password: 'pass456', name: 'VIKASH KUMAR', room: 'A-101' },
-        'ST005': { password: 'student789', name: 'AMIT SINGH', room: 'A-101' }
+        'ST002': { password: 'student123', name: 'SHIVAM BANSAL', room: 'A-101' },
+        'ST003': { password: 'mypass456', name: 'SAHITYA PATEL', room: 'A-101' },
+        'ST004': { password: 'pass456', name: 'ANSHUL SURYAVANSHI', room: 'A-101' },
+        'ST005': { password: 'student789', name: 'AMIT SINGH', room: 'A-102' }
     },
     admins: {
         'admin': { password: 'admin123', name: 'Hostel Administrator', role: 'Super Admin' },
@@ -20,7 +20,7 @@ const mockUsers = {
 
 // Room occupancy data
 const roomData = {
-    'A-101': { occupants: ['Ankit Gurjar', 'Rahul Sharma', 'Vikash Kumar', 'Amit Singh'], status: 'occupied' },
+    'A-101': { occupants: ['Ankit Gurjar', 'Shivam Bansal', 'Sahitya Patel', 'Anshul Suryavanshi'], status: 'occupied' },
     'A-102': { occupants: ['Priya Patel', 'Sneha Jain', 'Kavya Reddy', ''], status: 'partial' },
     'A-103': { occupants: ['Ravi Mehta', 'Suresh Yadav', '', ''], status: 'partial' },
     'A-104': { occupants: ['Deepak Joshi', 'Manoj Tiwari', 'Pooja Gupta', 'Arjun Mishra'], status: 'occupied' },
@@ -825,6 +825,116 @@ window.addEventListener('storage', function(event) {
     if (event.key === 'loggedInUser') {
         updateLoginSection();
     }
+});
+// Add to the mock data at the top of script.js
+const mockComplaints = [
+  {
+    id: 1,
+    title: 'AC not working',
+    date: 'Jan 25, 2025',
+    status: 'Pending',
+    room: 'A-101',
+    likes: 4,
+    likedBy: []
+  },
+  {
+    id: 2,
+    title: 'Water leakage in bathroom',
+    date: 'Jan 20, 2025',
+    status: 'In Progress',
+    room: 'B-202',
+    likes: 4,
+    likedBy: []
+  }
+];
+
+// Add this function to handle likes
+function likeComplaint(complaintId) {
+  const loggedInUser = sessionStorage.getItem('loggedInUser');
+  if (!loggedInUser) {
+    alert('Please login to like a complaint.');
+    openStudentLogin();
+    return;
+  }
+
+  const user = JSON.parse(loggedInUser);
+  const complaint = mockComplaints.find(c => c.id === complaintId);
+  
+  if (complaint) {
+    const userIndex = complaint.likedBy.indexOf(user.id || user.username);
+    const likeBtn = document.querySelector(`.like-btn[onclick="likeComplaint(${complaintId})"]`);
+    
+    if (userIndex === -1) {
+      // Like the complaint
+      complaint.likes++;
+      complaint.likedBy.push(user.id || user.username);
+      if (likeBtn) {
+        likeBtn.classList.add('liked');
+        likeBtn.querySelector('.like-count').textContent = complaint.likes;
+      }
+    } else {
+      // Unlike the complaint
+      complaint.likes--;
+      complaint.likedBy.splice(userIndex, 1);
+      if (likeBtn) {
+        likeBtn.classList.remove('liked');
+        likeBtn.querySelector('.like-count').textContent = complaint.likes;
+      }
+    }
+    
+    // Re-render complaints sorted by likes
+    renderComplaints();
+  }
+}
+
+        // Add this function to render complaints
+        function renderComplaints() {
+        const complaintsContainer = document.querySelector('.recent-complaints-card');
+        if (!complaintsContainer) return;
+
+        // Sort complaints by likes (descending)
+        const sortedComplaints = [...mockComplaints].sort((a, b) => b.likes - a.likes);
+        
+        let complaintsHTML = '<h3>📋 Recent Complaints</h3>';
+        
+        sortedComplaints.forEach(complaint => {
+            const loggedInUser = sessionStorage.getItem('loggedInUser');
+            const user = loggedInUser ? JSON.parse(loggedInUser) : null;
+            const isLiked = user && complaint.likedBy.includes(user.id || user.username);
+            
+            complaintsHTML += `
+            <div class="complaint-item">
+                <div class="complaint-header">
+                <strong>${complaint.title}</strong>
+                <span class="status-${complaint.status.toLowerCase().replace(' ', '-')}">${complaint.status}</span>
+                </div>
+                <div class="complaint-details">
+                <small>📅 ${complaint.date}</small>
+                <small>🏠 Room ${complaint.room}</small>
+                </div>
+                <div class="complaint-footer">
+                <button class="like-btn ${isLiked ? 'liked' : ''}" onclick="likeComplaint(${complaint.id})">
+                    <span class="like-icon">👍</span>
+                    <span class="like-count">${complaint.likes}</span>
+                </button>
+                </div>
+            </div>
+            `;
+        });
+        
+        complaintsContainer.innerHTML = complaintsHTML;
+        }
+
+// Update the loadRecentComplaints function
+function loadRecentComplaints() {
+  console.log('Recent complaints loaded:', mockComplaints);
+  renderComplaints();
+}
+
+// Add to the DOMContentLoaded event listener
+document.addEventListener('DOMContentLoaded', function() {
+  // ... existing code ...
+  renderComplaints(); // Add this line
 });
 
 // Export functions for global access
