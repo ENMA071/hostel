@@ -32,6 +32,58 @@ const roomData = {
     'B-205': { occupants: ['', '', '', ''], status: 'available' }
 };
 
+// Guest room data
+const guestRoomData = {
+    'GR-001': {
+        type: 'Guest Room',
+        features: ['AC', 'WiFi', 'Bathroom', 'Wardrobe'],
+        price: 500,
+        status: 'available',
+        bookings: []
+    },
+    'GR-002': {
+        type: 'Guest Room',
+        features: ['AC', 'WiFi', 'Bathroom', 'Wardrobe'],
+        price: 500,
+        status: 'available',
+        bookings: [
+            { from: '2025-02-05', to: '2025-02-08', guest: 'Mr. Sharma (Parent)', bookedBy: 'ST001' }
+        ]
+    },
+    'GR-003': {
+        type: 'Guest Room',
+        features: ['AC', 'WiFi', 'Bathroom', 'Wardrobe'],
+        price: 500,
+        status: 'available',
+        bookings: []
+    },
+    'GR-004': {
+        type: 'Guest Room',
+        features: ['AC', 'WiFi', 'Bathroom', 'Wardrobe'],
+        price: 500,
+        status: 'booked',
+        bookings: [
+            { from: '2025-02-01', to: '2025-02-07', guest: 'Mrs. Patel (Mother)', bookedBy: 'ST003' }
+        ]
+    },
+    'GR-005': {
+        type: 'Guest Room',
+        features: ['AC', 'WiFi', 'Bathroom', 'Wardrobe'],
+        price: 500,
+        status: 'available',
+        bookings: [
+            { from: '2025-02-10', to: '2025-02-12', guest: 'Mr. & Mrs. Kumar (Parents)', bookedBy: 'ST002' }
+        ]
+    },
+    'GR-006': {
+        type: 'Guest Room',
+        features: ['AC', 'WiFi', 'Bathroom', 'Wardrobe'],
+        price: 500,
+        status: 'available',
+        bookings: []
+    }
+};
+
 // Signup and OTP related variables
 const pendingSignups = {};
 const otpStore = {};
@@ -690,10 +742,18 @@ function handleMaintenanceClick() {
 }
 
 function handleGuestRoomClick() {
-    showSuccessModal('Redirecting to Guest Room Booking Page...');
-    setTimeout(() => {
-        window.location.href = 'guestroom.html';
-    }, 1500);
+    const loggedInUser = sessionStorage.getItem('loggedInUser');
+    
+    if (!loggedInUser) {
+        alert('Please login to book guest rooms.');
+        openStudentLogin();
+        sessionStorage.setItem('pendingAction', 'guestroom');
+    } else {
+        showSuccessModal('Redirecting to Guest Room Booking...');
+        setTimeout(() => {
+            window.location.href = 'guestroom.html';
+        }, 1500);
+    }
 }
 
 function handlePendingAction() {
@@ -715,6 +775,9 @@ function handlePendingAction() {
                     break;
                 case 'maintenance':
                     window.location.href = 'maintenance.html';
+                    break;
+                case 'guestroom':
+                    window.location.href = 'guestroom.html';
                     break;
                 default:
                     console.log('Unknown pending action:', pendingAction);
@@ -825,116 +888,6 @@ window.addEventListener('storage', function(event) {
     if (event.key === 'loggedInUser') {
         updateLoginSection();
     }
-});
-// Add to the mock data at the top of script.js
-const mockComplaints = [
-  {
-    id: 1,
-    title: 'AC not working',
-    date: 'Jan 25, 2025',
-    status: 'Pending',
-    room: 'A-101',
-    likes: 4,
-    likedBy: []
-  },
-  {
-    id: 2,
-    title: 'Water leakage in bathroom',
-    date: 'Jan 20, 2025',
-    status: 'In Progress',
-    room: 'B-202',
-    likes: 4,
-    likedBy: []
-  }
-];
-
-// Add this function to handle likes
-function likeComplaint(complaintId) {
-  const loggedInUser = sessionStorage.getItem('loggedInUser');
-  if (!loggedInUser) {
-    alert('Please login to like a complaint.');
-    openStudentLogin();
-    return;
-  }
-
-  const user = JSON.parse(loggedInUser);
-  const complaint = mockComplaints.find(c => c.id === complaintId);
-  
-  if (complaint) {
-    const userIndex = complaint.likedBy.indexOf(user.id || user.username);
-    const likeBtn = document.querySelector(`.like-btn[onclick="likeComplaint(${complaintId})"]`);
-    
-    if (userIndex === -1) {
-      // Like the complaint
-      complaint.likes++;
-      complaint.likedBy.push(user.id || user.username);
-      if (likeBtn) {
-        likeBtn.classList.add('liked');
-        likeBtn.querySelector('.like-count').textContent = complaint.likes;
-      }
-    } else {
-      // Unlike the complaint
-      complaint.likes--;
-      complaint.likedBy.splice(userIndex, 1);
-      if (likeBtn) {
-        likeBtn.classList.remove('liked');
-        likeBtn.querySelector('.like-count').textContent = complaint.likes;
-      }
-    }
-    
-    // Re-render complaints sorted by likes
-    renderComplaints();
-  }
-}
-
-        // Add this function to render complaints
-        function renderComplaints() {
-        const complaintsContainer = document.querySelector('.recent-complaints-card');
-        if (!complaintsContainer) return;
-
-        // Sort complaints by likes (descending)
-        const sortedComplaints = [...mockComplaints].sort((a, b) => b.likes - a.likes);
-        
-        let complaintsHTML = '<h3>📋 Recent Complaints</h3>';
-        
-        sortedComplaints.forEach(complaint => {
-            const loggedInUser = sessionStorage.getItem('loggedInUser');
-            const user = loggedInUser ? JSON.parse(loggedInUser) : null;
-            const isLiked = user && complaint.likedBy.includes(user.id || user.username);
-            
-            complaintsHTML += `
-            <div class="complaint-item">
-                <div class="complaint-header">
-                <strong>${complaint.title}</strong>
-                <span class="status-${complaint.status.toLowerCase().replace(' ', '-')}">${complaint.status}</span>
-                </div>
-                <div class="complaint-details">
-                <small>📅 ${complaint.date}</small>
-                <small>🏠 Room ${complaint.room}</small>
-                </div>
-                <div class="complaint-footer">
-                <button class="like-btn ${isLiked ? 'liked' : ''}" onclick="likeComplaint(${complaint.id})">
-                    <span class="like-icon">👍</span>
-                    <span class="like-count">${complaint.likes}</span>
-                </button>
-                </div>
-            </div>
-            `;
-        });
-        
-        complaintsContainer.innerHTML = complaintsHTML;
-        }
-
-// Update the loadRecentComplaints function
-function loadRecentComplaints() {
-  console.log('Recent complaints loaded:', mockComplaints);
-  renderComplaints();
-}
-
-// Add to the DOMContentLoaded event listener
-document.addEventListener('DOMContentLoaded', function() {
-  // ... existing code ...
-  renderComplaints(); // Add this line
 });
 
 // Export functions for global access
