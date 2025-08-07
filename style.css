@@ -1111,3 +1111,13 @@ body {
 .like-btn.liked .like-icon {
   color: #2196F3;
 }
+/* Empty blocks for spacing */
+.empty-block {
+  height: 20px; /* Adjust this value to control the space between blocks */
+  width: 100%;
+}
+
+/* Recent Complaints Section */
+.recent-complaints-section {
+  margin-top: 20px; /* Additional spacing if needed */
+}
