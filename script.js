@@ -484,9 +484,8 @@ function handleAdminLogin(e) {
             setButtonLoading(submitButton, false);
             updateLoginSection(); // Update UI immediately
             closeAdminLogin();
-            showSuccessModal(`Welcome, ${user.name}! Admin login successful.`);
-            
-            handlePendingAction();
+            // Redirect to admin dashboard after login
+            window.location.href = 'admin-index.html';
         } else {
             setButtonLoading(submitButton, false);
             showFormError('admin', 'Invalid username or password. Please try again.');
@@ -622,10 +621,11 @@ function resendOTP() {
 
 // Logout functionality
 function logout() {
-    sessionStorage.removeItem('loggedInUser');
-    console.log('User logged out');
-    updateLoginSection();
-    window.location.reload();
+    const confirmLogout = confirm('Are you sure you want to logout?');
+    if (confirmLogout) {
+        sessionStorage.removeItem('loggedInUser');
+        window.location.href = 'index.html';
+    }
 }
 
 // Quick action handlers
@@ -961,3 +961,42 @@ console.log('Hostel Management System JavaScript loaded successfully');
 console.log('Demo Login Credentials:');
 console.log('Students: ST001/pass123, ST002/student123, ST003/mypass456, ST004/pass456, ST005/student789');
 console.log('Admins: admin/admin123, warden/warden456, maintenance/maint789');
+// Add this to your existing handleLogin function
+function handleLogin(userType) {
+    const userId = document.getElementById(`${userType}Id`).value;
+    const password = document.getElementById(`${userType}Password`).value;
+    const errorElement = document.getElementById(`${userType}Error`);
+
+    if (!userId || !password) {
+        showError(errorElement, 'Please fill in all fields');
+        return;
+    }
+
+    const users = userType === 'student' ? mockUsers.students : mockUsers.admins;
+    const user = users[userId];
+
+    if (user && user.password === password) {
+        // Store user session
+        const userSession = {
+            id: userId,
+            name: user.name,
+            type: userType,
+            room: user.room || null,
+            role: user.role || null
+        };
+        
+        sessionStorage.setItem('loggedInUser', JSON.stringify(userSession));
+        
+        // Redirect based on user type
+        if (userType === 'admin') {
+            window.location.href = 'admin-index.html';
+        } else {
+            // Redirect to student dashboard (you can create this later)
+            alert('Student login successful! Student dashboard coming soon...');
+            closeModal();
+            updateLoginSection();
+        }
+    } else {
+        showError(errorElement, 'Invalid credentials');
+    }
+}

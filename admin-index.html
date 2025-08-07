@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Hostel Management System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admin-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header Section (same as index.html but with admin controls) -->
+    <div class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo-section">
+                    <img src="image.jpg" alt="College Logo" class="college-logo" id="headerLogo">
+                    <div class="logo-placeholder" id="logoPlaceholder">
+                        <div class="logo-circle">LOGO</div>
+                    </div>
+                </div>
+                <div class="college-info">
+                    <h1>MADHAV INSTITUTE OF TECHNOLOGY & SCIENCE</h1>
+                    <h2>GWALIOR (M.P.), INDIA</h2>
+                    <div class="university-status">
+                        Deemed University <span>(Declared under Distinct Category by Ministry of Education, Government of India)</span>
+                    </div>
+                    <div class="accreditation">NAAC ACCREDITED WITH A++ GRADE</div>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <div class="website-link">
+                    <a href="https://www.mitsgwalior.in" target="_blank" class="college-website-btn">
+                        <i class="fas fa-globe website-icon"></i>
+                        Visit College Website
+                    </a>
+                </div>
+                
+                <div class="login-section">
+                    <button class="login-btn profile-btn" onclick="showProfile()">
+                        <i class="fas fa-user login-icon"></i>
+                        <span id="adminName">Admin</span>
+                    </button>
+                    <button class="login-btn logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt login-icon"></i>
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container (similar to index.html but with admin controls) -->
+    <main class="container" role="main">
+        <!-- First Row: Bulletin Board and Quick Actions -->
+        <div class="top-row">
+            <!-- Left Side - Bulletin Board with admin controls -->
+            <section class="bulletin-section">
+                <div class="card bulletin-card">
+                    <div class="section-header">
+                        <h3>📌 Bulletin Board</h3>
+                        <button class="btn btn-primary" onclick="showAddBulletinModal()">
+                            <i class="fas fa-plus"></i> Add Notice
+                        </button>
+                    </div>
+                    <div class="bulletin-slider">
+                        <!-- Bulletin slides will be populated here -->
+                    </div>
+                    <div class="slider-controls">
+                        <button class="slider-btn prev" onclick="previousSlide()">‹</button>
+                        <div class="slider-dots">
+                            <!-- Dots will be populated here -->
+                        </div>
+                        <button class="slider-btn next" onclick="nextSlide()">›</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Side - Quick Actions and Recent Complaints -->
+            <section class="right-section">
+                <div class="card quick-actions-card">
+                    <h3>🚀 Admin Quick Actions</h3>
+                    <div class="quick-actions-list">
+                        <div class="action-item" onclick="showAddBulletinModal()">
+                            <span class="action-bullet">•</span>
+                            <span class="action-text">Add Notice</span>
+                            <span class="action-icon">📝</span>
+                        </div>
+                        <div class="action-item" onclick="showSection('students')">
+                            <span class="action-bullet">•</span>
+                            <span class="action-text">Manage Students</span>
+                            <span class="action-icon">👨‍🎓</span>
+                        </div>
+                        <div class="action-item" onclick="showSection('complaints')">
+                            <span class="action-bullet">•</span>
+                            <span class="action-text">Manage Complaints</span>
+                            <span class="action-icon">📋</span>
+                        </div>
+                        <div class="action-item" onclick="showSection('rooms')">
+                            <span class="action-bullet">•</span>
+                            <span class="action-text">Manage Rooms</span>
+                            <span class="action-icon">🏨</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card recent-complaints-card">
+                    <h3>📋 Recent Complaints</h3>
+                    <div id="complaintsContainer">
+                        <!-- Complaints will be populated here -->
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Second Row: Room Information -->
+        <section class="room-info-section">
+            <div class="card room-info-card">
+                <div class="section-header">
+                    <h3>🏠 Room Occupancy Overview</h3>
+                    <button class="btn btn-primary" onclick="showSection('rooms')">
+                        <i class="fas fa-cog"></i> Manage Rooms
+                    </button>
+                </div>
+                <div class="rooms-grid">
+                    <!-- Room data will be populated here -->
+                </div>
+                <div class="room-legend">
+                    <div class="legend-item">
+                        <span class="legend-color occupied"></span>
+                        <span>Occupied (4/4)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color partial"></span>
+                        <span>Partial (1-3/4)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color available"></span>
+                        <span>Available (0/4)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Dashboard Sections (hidden by default) -->
+        <div id="dashboard-section" class="admin-section" style="display:none;">
+            <!-- Dashboard content -->
+        </div>
+
+        <div id="students-section" class="admin-section" style="display:none;">
+            <!-- Student management content -->
+        </div>
+
+        <div id="complaints-section" class="admin-section" style="display:none;">
+            <!-- Complaints management content -->
+        </div>
+
+        <div id="rooms-section" class="admin-section" style="display:none;">
+            <!-- Room management content -->
+        </div>
+    </main>
+
+    <!-- Add/Edit Bulletin Modal -->
+    <div id="bulletinModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeBulletinModal()">&times;</span>
+            <h2 id="modalTitle">Add New Notice</h2>
+            <form id="bulletinForm">
+                <div class="form-group">
+                    <label for="bulletinTitle">Title:</label>
+                    <input type="text" id="bulletinTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="bulletinCategory">Category:</label>
+                    <select id="bulletinCategory" required>
+                        <option value="general">General</option>
+                        <option value="urgent">Urgent</option>
+                        <option value="maintenance">Maintenance</option>
+                        <option value="important">Important</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="bulletinContent">Content:</label>
+                    <textarea id="bulletinContent" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="bulletinDate">Date:</label>
+                    <input type="date" id="bulletinDate" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Notice
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeBulletinModal()">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Student Details Modal -->
+    <div id="studentModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeStudentModal()">&times;</span>
+            <h2>Student Details</h2>
+            <div id="studentDetails">
+                <!-- Student details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="admin-script.js"></script>
+</body>
+</html>
